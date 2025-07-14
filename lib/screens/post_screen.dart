@@ -261,19 +261,30 @@ class _PostScreenState extends State<PostScreen> {
       body: _controller.value.isInitialized
           ? Stack(
         children: [
-          // Video background
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width: _controller.value.size.width,
-                height: _controller.value.size.height,
-                child: VideoPlayer(_controller),
+          // ✅ Video background with tap to pause/play
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                if (_controller.value.isPlaying) {
+                  _controller.pause();
+                } else {
+                  _controller.play();
+                }
+              });
+            },
+            child: SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _controller.value.size.width,
+                  height: _controller.value.size.height,
+                  child: VideoPlayer(_controller),
+                ),
               ),
             ),
           ),
 
-          // Right side icons (Like, Comment, Share, More)
+          // Right side icons
           if (_showUI)
             Positioned(
               bottom: 120,
@@ -326,7 +337,8 @@ class _PostScreenState extends State<PostScreen> {
                           backgroundImage: AssetImage('assets/user.png'),
                         ),
                         SizedBox(width: 8),
-                        Text('@reel_creator', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        Text('@reel_creator',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),

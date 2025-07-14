@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import '../utils/user_data.dart'; // ✅ Import the global user lists
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,6 +20,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _image = File(picked.path);
       });
     }
+  }
+
+  Widget _buildCountColumn(String label, int count, String route) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, route).then((_) => setState(() {}));
+        },
+        child: Column(
+          children: [
+            Text(
+              '$count',
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 14, color: Colors.black),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -55,47 +84,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // Followers Info
+            // Count Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                _StatTile(label: "Following", value: "0"),
-                _StatTile(label: "Followers", value: "0"),
-                _StatTile(label: "Sent", value: "0"),
+              children: [
+                _buildCountColumn('Following', followingList.length, '/following'),
+                _buildCountColumn('Followers', followersList.length, '/followers'),
+                _buildCountColumn('Sent', sentList.length, '/sent'),
               ],
             ),
 
             const Divider(height: 30),
 
-            // Profile Tiles with Different Colors
-            const _ProfileTile(icon: Icons.account_balance_wallet, title: "Wallet", titleColor: Colors.teal, trailingText: '0'),
-            const _ProfileTile(icon: Icons.monetization_on, title: "Earn Money", titleColor: Colors.indigo),
-            const _ProfileTile(icon: Icons.redeem, title: "Get Rupees", showDot: true, titleColor: Colors.orange),
-            const _ProfileTile(icon: Icons.message, title: "Messages", badge: '11', titleColor: Colors.purple),
-            const _ProfileTile(icon: Icons.task_alt, title: "Task", badge: "Check In", titleColor: Colors.green),
-            const _ProfileTile(icon: Icons.emoji_events, title: "Badge", titleColor: Colors.pink),
-            const _ProfileTile(icon: Icons.security, title: "Account Security", titleColor: Colors.deepPurple),
-            const _ProfileTile(icon: Icons.settings, title: "Settings", titleColor: Colors.brown),
+            // Profile Tiles
+            const _ProfileTile(
+              icon: Icons.account_balance_wallet,
+              title: "Wallet",
+              titleColor: Colors.teal,
+              trailingText: '0',
+            ),
+            const _ProfileTile(
+              icon: Icons.monetization_on,
+              title: "Earn Money",
+              titleColor: Colors.indigo,
+            ),
+            const _ProfileTile(
+              icon: Icons.redeem,
+              title: "Get Rupees",
+              showDot: true,
+              titleColor: Colors.orange,
+            ),
+            const _ProfileTile(
+              icon: Icons.message,
+              title: "Messages",
+              badge: '11',
+              titleColor: Colors.purple,
+            ),
+            const _ProfileTile(
+              icon: Icons.task_alt,
+              title: "Task",
+              badge: "Check In",
+              titleColor: Colors.green,
+            ),
+            const _ProfileTile(
+              icon: Icons.emoji_events,
+              title: "Badge",
+              titleColor: Colors.pink,
+            ),
+            const _ProfileTile(
+              icon: Icons.security,
+              title: "Account Security",
+              titleColor: Colors.deepPurple,
+            ),
+            const _ProfileTile(
+              icon: Icons.settings,
+              title: "Settings",
+              titleColor: Colors.brown,
+            ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _StatTile extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _StatTile({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-      ],
     );
   }
 }
@@ -131,21 +179,54 @@ class _ProfileTile extends StatelessWidget {
         child: Text(badge!, style: const TextStyle(color: Colors.white)),
       );
     } else if (trailingText != null) {
-      trailing = Text(trailingText!,
-          style: const TextStyle(fontWeight: FontWeight.bold));
+      trailing = Text(
+        trailingText!,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      );
     } else if (showDot) {
-      trailing = const CircleAvatar(radius: 4, backgroundColor: Colors.red);
+      trailing = const CircleAvatar(radius: 4, backgroundColor: Colors.redAccent);
     } else {
       trailing = const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey);
     }
 
-    return ListTile(
-      leading: Icon(icon, color: Colors.grey[800]),
-      title: Text(
-        title,
-        style: TextStyle(color: titleColor ?? Colors.black87),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: ListTile(
+        leading: Icon(icon, color: Colors.grey[800]),
+        title: Text(
+          title,
+          style: TextStyle(color: titleColor ?? Colors.black87),
+        ),
+        trailing: trailing,
+        onTap: () {
+          switch (title) {
+            case 'Wallet':
+              Navigator.pushNamed(context, '/wallet');
+              break;
+            case 'Earn Money':
+              Navigator.pushNamed(context, '/earn');
+              break;
+            case 'Get Rupees':
+              Navigator.pushNamed(context, '/getRupees');
+              break;
+            case 'Messages':
+              Navigator.pushNamed(context, '/messages');
+              break;
+            case 'Task':
+              Navigator.pushNamed(context, '/task');
+              break;
+            case 'Badge':
+              Navigator.pushNamed(context, '/badge');
+              break;
+            case 'Account Security':
+              Navigator.pushNamed(context, '/accountSecurity');
+              break;
+            case 'Settings':
+              Navigator.pushNamed(context, '/settings');
+              break;
+          }
+        },
       ),
-      trailing: trailing,
     );
   }
 }
