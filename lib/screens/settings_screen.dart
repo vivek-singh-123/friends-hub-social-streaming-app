@@ -8,7 +8,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String _selectedLanguage = 'English';
   bool _notificationsEnabled = true;
   bool _hideFavorites = false;
   bool _hideLikes = false;
@@ -21,16 +20,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text('Language', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          DropdownButton<String>(
-            value: _selectedLanguage,
-            items: ['English', 'Hindi', 'Spanish', 'French']
-                .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
-                .toList(),
-            onChanged: (value) => setState(() => _selectedLanguage = value!),
-          ),
-          const Divider(),
-
           SwitchListTile(
             title: const Text('Notifications'),
             value: _notificationsEnabled,

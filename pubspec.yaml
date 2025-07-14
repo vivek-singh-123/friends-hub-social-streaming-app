@@ -26,8 +26,10 @@ flutter:
 
   assets:
     - assets/default_avatar.png
+    - assets/cover_placeholder.png
     - assets/live_placeholder.jpg
     - assets/user.png
+
     - assets/videos/video1.mp4
     - assets/videos/video2.mp4
     - assets/videos/video3.mp4
@@ -36,3 +38,4 @@ flutter:
     - assets/icons/snapchat.png
     - assets/icons/instagram.png
     - assets/icons/facebook.png
+    - assets/vip_wolf.png

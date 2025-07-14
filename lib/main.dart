@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gosh_app/screens/edit_profile_screen.dart';
+import 'package:gosh_app/screens/vip_screen.dart';
+import 'package:gosh_app/screens/full_profile_screen.dart'; // ✅ NEW Import
 
 // Splash/Login/Profile Setup
 import 'screens/splash_screen.dart';
@@ -58,11 +61,16 @@ class GoshLiveApp extends StatelessWidget {
         '/badge': (context) => const BadgeScreen(),
         '/accountSecurity': (context) => const AccountSecurityScreen(),
         '/settings': (context) => const SettingsScreen(),
+        '/vip': (context) => const VipScreen(),
 
         // ✅ Top Stats Routes
         '/followers': (context) => const FollowersScreen(),
         '/following': (context) => const FollowingScreen(),
         '/sent': (context) => const SentScreen(),
+
+        // ✅ Edit & Full Profile
+        '/editProfile': (context) => const EditProfileScreen(),
+        '/fullProfile': (context) => const FullProfileScreen(), // ✅ NEW Route
       },
     );
   }

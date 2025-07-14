@@ -1,4 +1,6 @@
-List<String> followingList = [
+// lib/utils/user_data.dart
+
+List<String> followersList = [
   'Virat Kohli',
   'Kane Williamson',
   'Rohit Sharma',
@@ -9,7 +11,7 @@ List<String> followingList = [
   'Hardik Pandya',
 ];
 
-List<String> followersList = [
+List<String> followingList = [
   'Virat Kohli',
   'Kane Williamson',
   'Rohit Sharma',
