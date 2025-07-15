@@ -14,6 +14,12 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isPostScreen = currentIndex == 2;
 
+    // Dynamic color logic
+    Color getIconColor(int index) {
+      if (index == currentIndex) return Colors.green;
+      return isPostScreen ? Colors.white : Colors.black;
+    }
+
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
@@ -23,46 +29,46 @@ class BottomNavBar extends StatelessWidget {
       showUnselectedLabels: true,
       selectedFontSize: 12,
       unselectedFontSize: 12,
-      // ✅ Add label color logic here
       selectedItemColor: isPostScreen ? Colors.white : Colors.black,
       unselectedItemColor: isPostScreen ? Colors.white60 : Colors.grey,
       items: [
         BottomNavigationBarItem(
           icon: Icon(
             Icons.live_tv,
-            color: currentIndex == 0 ? Colors.green : Colors.black,
+            color: getIconColor(0),
           ),
           label: "Live",
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.search,
-            color: currentIndex == 1 ? Colors.green : Colors.black,
+            color: getIconColor(1),
           ),
           label: "Discover",
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.add_box,
+          icon: Image.asset(
+            'assets/icons/video.png',
+            height: 24,
             color: currentIndex == 2
                 ? Colors.green
                 : isPostScreen
                 ? Colors.white
                 : Colors.black,
           ),
-          label: "Post",
+          label: "Video",
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.account_balance_wallet,
-            color: currentIndex == 3 ? Colors.green : Colors.black,
+            color: getIconColor(3),
           ),
           label: "Wallet",
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.person,
-            color: currentIndex == 4 ? Colors.green : Colors.black,
+            color: getIconColor(4),
           ),
           label: "Profile",
         ),

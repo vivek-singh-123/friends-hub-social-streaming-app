@@ -166,7 +166,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 const String termsContent = '''
                                         <h1>Terms & Conditions</h1>
 </br>
-Welcome to GOSH!
+Welcome to Friends HUB!
 </br>
 </br>
 </br>
@@ -380,8 +380,8 @@ We reserve all rights not expressly granted to you.
 You may not transfer any of your rights or obligations under these Terms without our consent.
 These Terms were written in English and to the extent the translated version of these Terms conflict with the English version, the English version will control.
 <h5>Contact Us</h5>
-Gosh welcomes comments, questions, concerns, or suggestions. Please send feedback to us by visiting https://gosh0.com<br>
-Gosh is operated by Gosh Streaming PTY LTD. ''';
+Friends HUB welcomes comments, questions, concerns, or suggestions. Please send feedback to us by visiting https://gosh0.com<br>
+Friends HUB is operated by Friends HUB Streaming PTY LTD. ''';
 
 // Full Privacy Policy (optional: replace with your full version)
 const String privacyContent = '''
@@ -453,7 +453,7 @@ When we post changes to the statement, we will revise the "Last Updated" date at
 </br>
 
 <h5>10. HOW TO CONTACT US</h5>
-If you have any questions about this Privacy Policy or a question about Gosh, please contact us at support@gosh.com
+If you have any questions about this Privacy Policy or a question about Friends HUB, please contact us at support@friendshub.com
 
 </br>
 <h5>11. DATE</h5>
