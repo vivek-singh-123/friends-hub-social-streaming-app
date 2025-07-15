@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
+
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -9,28 +14,44 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-  late VideoPlayerController _controller;
+  final List<String> videoPaths = [
+    'assets/videos/video1.mp4',
+    'assets/videos/video2.mp4',
+    'assets/videos/video3.mp4',
+  ];
+
+  final List<VideoPlayerController> _controllers = [];
+  int _currentIndex = 0;
+  bool _autoplay = true;
+  bool _showUI = true;
+  double _playbackSpeed = 1.0;
+
   int likes = 0;
   bool isLiked = false;
   final List<String> comments = [];
-  bool _showUI = true;
-  bool _autoplay = true;
-  double _playbackSpeed = 1.0;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/videos/video1.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-        if (_autoplay) _controller.play();
-        _controller.setLooping(true);
-      });
+    _initializeControllers();
+  }
+
+  Future<void> _initializeControllers() async {
+    for (int i = 0; i < videoPaths.length; i++) {
+      final controller = VideoPlayerController.asset(videoPaths[i]);
+      await controller.initialize();
+      controller.setLooping(true);
+      if (_autoplay && i == 0) controller.play();
+      _controllers.add(controller);
+    }
+    setState(() {});
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -133,6 +154,31 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
+  void _showSpeedDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.grey[900],
+        title: const Text("Playback Speed", style: TextStyle(color: Colors.white)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [0.5, 1.0, 1.5, 2.0].map((speed) {
+            return ListTile(
+              title: Text('${speed}x', style: const TextStyle(color: Colors.white)),
+              onTap: () {
+                setState(() {
+                  _playbackSpeed = speed;
+                  _controllers[_currentIndex].setPlaybackSpeed(speed);
+                });
+                Navigator.pop(context);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   void _shareReel() {
     showModalBottomSheet(
       context: context,
@@ -166,10 +212,17 @@ class _PostScreenState extends State<PostScreen> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
+          onTap: () async {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Shared on $name')),
+            final path = videoPaths[_currentIndex];
+            final byteData = await rootBundle.load(path);
+            final tempDir = await getTemporaryDirectory();
+            final file = File('${tempDir.path}/shared_reel.mp4');
+            await file.writeAsBytes(byteData.buffer.asUint8List());
+
+            await Share.shareXFiles(
+              [XFile(file.path)],
+              text: 'Check out this reel on Friends HUB!',
             );
           },
           child: CircleAvatar(
@@ -184,30 +237,6 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  void _showSpeedDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text("Playback Speed", style: TextStyle(color: Colors.white)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [0.5, 1.0, 1.5, 2.0].map((speed) {
-            return ListTile(
-              title: Text('${speed}x', style: const TextStyle(color: Colors.white)),
-              onTap: () {
-                setState(() {
-                  _playbackSpeed = speed;
-                  _controller.setPlaybackSpeed(speed);
-                });
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
 
   void _showOptionsMenu() {
     showModalBottomSheet(
@@ -258,103 +287,110 @@ class _PostScreenState extends State<PostScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: _controller.value.isInitialized
-          ? Stack(
-        children: [
-          // ✅ Video background with tap to pause/play
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (_controller.value.isPlaying) {
-                  _controller.pause();
-                } else {
-                  _controller.play();
-                }
-              });
-            },
-            child: SizedBox.expand(
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: SizedBox(
-                  width: _controller.value.size.width,
-                  height: _controller.value.size.height,
-                  child: VideoPlayer(_controller),
+      body: _controllers.length != videoPaths.length
+          ? const Center(child: CircularProgressIndicator())
+          : PageView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: videoPaths.length,
+        onPageChanged: (index) {
+          setState(() {
+            _controllers[_currentIndex].pause();
+            _currentIndex = index;
+            if (_autoplay) _controllers[_currentIndex].play();
+          });
+        },
+        itemBuilder: (context, index) {
+          final controller = _controllers[index];
+
+          return Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (controller.value.isPlaying) {
+                      controller.pause();
+                    } else {
+                      controller.play();
+                    }
+                  });
+                },
+                child: SizedBox.expand(
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: controller.value.size.width,
+                      height: controller.value.size.height,
+                      child: VideoPlayer(controller),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-
-          // Right side icons
-          if (_showUI)
-            Positioned(
-              bottom: 120,
-              right: 16,
-              child: Column(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: isLiked ? Colors.red : Colors.white,
-                      size: 30,
-                    ),
-                    onPressed: _toggleLike,
-                  ),
-                  Text('$likes', style: const TextStyle(color: Colors.white)),
-                  const SizedBox(height: 16),
-                  IconButton(
-                    icon: const Icon(Icons.comment, color: Colors.white, size: 30),
-                    onPressed: _openCommentSheet,
-                  ),
-                  const SizedBox(height: 16),
-                  IconButton(
-                    icon: const Icon(Icons.share, color: Colors.white, size: 30),
-                    onPressed: _shareReel,
-                  ),
-                  const SizedBox(height: 16),
-                  IconButton(
-                    icon: const Icon(Icons.more_vert, color: Colors.white, size: 30),
-                    onPressed: _showOptionsMenu,
-                  ),
-                ],
-              ),
-            ),
-
-          // Creator Info & Caption
-          if (_showUI)
-            Positioned(
-              bottom: 10,
-              left: 16,
-              right: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/creatorProfile'),
-                    child: Row(
-                      children: const [
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundImage: AssetImage('assets/user.png'),
+              if (_showUI)
+                Positioned(
+                  bottom: 120,
+                  right: 16,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : Colors.white,
+                          size: 30,
                         ),
-                        SizedBox(width: 8),
-                        Text('@reel_creator',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
+                        onPressed: _toggleLike,
+                      ),
+                      Text('$likes', style: const TextStyle(color: Colors.white)),
+                      const SizedBox(height: 16),
+                      IconButton(
+                        icon: const Icon(Icons.comment, color: Colors.white, size: 30),
+                        onPressed: _openCommentSheet,
+                      ),
+                      const SizedBox(height: 16),
+                      IconButton(
+                        icon: const Icon(Icons.share, color: Colors.white, size: 30),
+                        onPressed: _shareReel,
+                      ),
+                      const SizedBox(height: 16),
+                      IconButton(
+                        icon: const Icon(Icons.more_vert, color: Colors.white, size: 30),
+                        onPressed: _showOptionsMenu,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "This is an awesome reel! 🎉🔥",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                ),
+              if (_showUI)
+                Positioned(
+                  bottom: 10,
+                  left: 16,
+                  right: 100,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 16,
+                            backgroundImage: AssetImage('assets/user.png'),
+                          ),
+                          SizedBox(width: 8),
+                          Text('@reel_creator',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "This is an awesome reel! 🎉🔥",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-        ],
-      )
-          : const Center(child: CircularProgressIndicator()),
+                ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

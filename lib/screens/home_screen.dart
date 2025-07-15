@@ -6,7 +6,6 @@ import 'package:gosh_app/screens/profile_screen.dart';
 import 'package:gosh_app/screens/wallet_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,29 +14,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 4; // Default to Profile
+  int _currentIndex = 0; // ✅ Default to Live screen
 
-  final List<Widget> screens = [
-    const LiveScreen(),        // 0
-    const DiscoverScreen(),    // 1 - Discover (with search bar)
+  final List<Widget> _screens = [
+    const LiveScreen(),        // 0 - Live
+    const DiscoverScreen(),    // 1 - Discover
     const PostScreen(),        // 2 - Post
-    WalletScreen(),            // 3
-    const ProfileScreen(),     // 4
+    WalletScreen(),            // 3 - Wallet
+    const ProfileScreen(),     // 4 - Profile
   ];
+
+  void _onTabTapped(int index) {
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     final bool isPostScreen = _currentIndex == 2;
 
     return Scaffold(
-      body: screens[_currentIndex],
+      body: _screens[_currentIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           canvasColor: isPostScreen ? Colors.black : Colors.white,
         ),
         child: BottomNavBar(
           currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
+          onTap: _onTabTapped,
         ),
       ),
     );

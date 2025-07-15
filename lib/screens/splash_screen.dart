@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: const [
             Icon(Icons.flash_on, color: Colors.deepPurple, size: 80),
             SizedBox(height: 20),
-            Text("GOSH LIVE", style: TextStyle(fontSize: 28)),
+            Text("Friends HUB", style: TextStyle(fontSize: 28)),
             Text("Go Live. Be Seen.", style: TextStyle(fontSize: 16)),
           ],
         ),

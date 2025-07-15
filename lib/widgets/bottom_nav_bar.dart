@@ -23,6 +23,9 @@ class BottomNavBar extends StatelessWidget {
       showUnselectedLabels: true,
       selectedFontSize: 12,
       unselectedFontSize: 12,
+      // ✅ Add label color logic here
+      selectedItemColor: isPostScreen ? Colors.white : Colors.black,
+      unselectedItemColor: isPostScreen ? Colors.white60 : Colors.grey,
       items: [
         BottomNavigationBarItem(
           icon: Icon(

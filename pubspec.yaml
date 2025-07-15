@@ -15,6 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   image_picker: ^1.1.0
   share_plus: ^7.2.1
+  flutter_html: ^3.0.0
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
@@ -27,7 +29,6 @@ flutter:
   assets:
     - assets/default_avatar.png
     - assets/cover_placeholder.png
-    - assets/live_placeholder.jpg
     - assets/user.png
 
     - assets/videos/video1.mp4
@@ -39,3 +40,21 @@ flutter:
     - assets/icons/instagram.png
     - assets/icons/facebook.png
     - assets/vip_wolf.png
+
+    - assets/live_videos/live1.mp4
+    - assets/live_videos/live2.mp4
+    - assets/live_videos/live3.mp4
+    - assets/live_videos/live4.mp4
+    - assets/live_videos/live5.mp4
+    - assets/live_videos/live6.mp4
+    - assets/live_videos/live7.mp4
+    - assets/live_videos/live8.mp4
+
+    - assets/live_thumbnails/thumb1.jpg
+    - assets/live_thumbnails/thumb2.jpg
+    - assets/live_thumbnails/thumb3.jpg
+    - assets/live_thumbnails/thumb4.jpg
+    - assets/live_thumbnails/thumb5.jpg
+    - assets/live_thumbnails/thumb6.jpg
+    - assets/live_thumbnails/thumb7.jpg
+    - assets/live_thumbnails/thumb8.jpg

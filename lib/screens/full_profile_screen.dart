@@ -105,12 +105,33 @@ class _FullProfileScreenState extends State<FullProfileScreen>
                       fit: BoxFit.cover,
                     )
                         : const DecorationImage(
-                      image:
-                      AssetImage('assets/cover_placeholder.png'),
+                      image: AssetImage('assets/cover_placeholder.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
+
+                // 🔙 Back Button (Top Left)
+                Positioned(
+                  top: 32,
+                  left: 16,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child:
+                      const Icon(Icons.arrow_back, color: Colors.black87),
+                    ),
+                  ),
+                ),
+
+                // ✏️ Edit Button (Top Right)
                 Positioned(
                   top: 32,
                   right: 16,
@@ -126,9 +147,11 @@ class _FullProfileScreenState extends State<FullProfileScreen>
                     ),
                   ),
                 ),
+
+                // 👤 Profile Picture
                 Positioned(
-                  bottom: -40,
-                  left: 20,
+                  bottom: -15,
+                  left: 10,
                   child: CircleAvatar(
                     radius: 45,
                     backgroundColor: Colors.white,
@@ -141,7 +164,10 @@ class _FullProfileScreenState extends State<FullProfileScreen>
                 ),
               ],
             ),
+
             const SizedBox(height: 50),
+
+            // 📦 Profile Box
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -200,7 +226,10 @@ class _FullProfileScreenState extends State<FullProfileScreen>
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
+            // 📌 Tabs
             TabBar(
               controller: _tabController,
               labelColor: Colors.deepPurple,
@@ -213,11 +242,13 @@ class _FullProfileScreenState extends State<FullProfileScreen>
                 Tab(text: "Likes"),
               ],
             ),
+
+            // 📄 Tab Views
             SizedBox(
               height: 250,
               child: TabBarView(
                 controller: _tabController,
-                children: [
+                children: const [
                   Center(child: Text("No posts yet")),
                   Center(child: Text("About Vivek Singh")),
                   Center(child: Text("No favorites added")),

@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Icon(Icons.live_tv, size: 60, color: Colors.deepPurple),
               const SizedBox(height: 16),
               Text(
-                isLogin ? "Login to GOSH APP" : "Sign Up for GOSH APP",
+                isLogin ? "Login to Friends HUB" : "Sign Up for Friends HUB",
                 style: const TextStyle(fontSize: 22),
               ),
               const SizedBox(height: 30),

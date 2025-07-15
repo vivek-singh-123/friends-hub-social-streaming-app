@@ -186,7 +186,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           // 🔘 Go to Full Profile
           Positioned(
-            top: 40,
+            top: 70,
             right: 20,
             child: GestureDetector(
               onTap: () {
@@ -307,7 +307,7 @@ class _VipPromoTile extends StatelessWidget {
             SizedBox(width: 10),
             Expanded(
               child: Text(
-                'Join GOSH VIP',
+                'Join Friends HUB VIP',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
