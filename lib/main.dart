@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // ✅ Needed for SystemChrome
 import 'package:gosh_app/screens/edit_profile_screen.dart';
 import 'package:gosh_app/screens/vip_screen.dart';
 import 'package:gosh_app/screens/full_profile_screen.dart'; // ✅ NEW Import
@@ -28,6 +29,15 @@ import 'screens/following_screen.dart';
 import 'screens/sent_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Set status bar style
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // Fully transparent status bar
+    statusBarIconBrightness: Brightness.light, // White icons for dark background
+    statusBarBrightness: Brightness.dark, // For iOS: dark background, light icons
+  ));
+
   runApp(const GoshLiveApp());
 }
 
@@ -70,7 +80,7 @@ class GoshLiveApp extends StatelessWidget {
 
         // ✅ Edit & Full Profile
         '/editProfile': (context) => const EditProfileScreen(),
-        '/fullProfile': (context) => const FullProfileScreen(), // ✅ NEW Route
+        '/fullProfile': (context) => const FullProfileScreen(),
       },
     );
   }

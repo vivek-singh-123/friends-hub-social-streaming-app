@@ -23,15 +23,18 @@ class _LiveScreenState extends State<LiveScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // ✅ Fix: Make time and status icons black
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
+  void initState() {
+    super.initState();
+    // ✅ Set status bar style for white background
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark, // Dark icons on white
+      statusBarBrightness: Brightness.light, // For iOS
+    ));
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -205,6 +208,14 @@ class _LivePlayerScreenState extends State<LivePlayerScreen> {
   @override
   void initState() {
     super.initState();
+
+    // ✅ Set status bar style for dark background
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light, // White icons
+      statusBarBrightness: Brightness.dark, // For iOS
+    ));
+
     _controller = VideoPlayerController.asset(widget.videoPath)
       ..initialize().then((_) {
         setState(() {});
