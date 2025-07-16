@@ -13,13 +13,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final usernameController = TextEditingController();
   final ageController = TextEditingController();
   String gender = "Male";
-
   File? _imageFile;
 
   Future<void> _pickImage() async {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -27,8 +26,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         child: Wrap(
           children: [
             ListTile(
-              leading: const Icon(Icons.camera_alt, color: Colors.white),
-              title: const Text("Take a photo", style: TextStyle(color: Colors.white)),
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Take a photo"),
               onTap: () async {
                 Navigator.pop(context);
                 final picked = await ImagePicker().pickImage(source: ImageSource.camera);
@@ -38,8 +37,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.photo_library, color: Colors.white),
-              title: const Text("Choose from gallery", style: TextStyle(color: Colors.white)),
+              leading: const Icon(Icons.photo_library),
+              title: const Text("Choose from gallery"),
               onTap: () async {
                 Navigator.pop(context);
                 final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -57,53 +56,99 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Set Up Profile")),
+      backgroundColor: const Color(0xFFF3F6FA),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        title: const Text("Profile Setup", style: TextStyle(color: Colors.black)),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Profile Image with tap
+            // Profile image
             GestureDetector(
               onTap: _pickImage,
-              child: CircleAvatar(
-                radius: 55,
-                backgroundColor: Colors.deepPurple,
-                backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-                child: _imageFile == null
-                    ? const Icon(Icons.camera_alt, color: Colors.white, size: 30)
-                    : null,
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.grey[200],
+                  backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
+                  child: _imageFile == null
+                      ? const Icon(Icons.camera_alt, size: 30, color: Colors.grey)
+                      : null,
+                ),
               ),
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: usernameController,
-              decoration: _inputDecoration("Username"),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: ageController,
-              keyboardType: TextInputType.number,
-              decoration: _inputDecoration("Age"),
-              style: const TextStyle(color: Colors.white),
-            ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              value: gender,
-              decoration: _inputDecoration("Gender"),
-              dropdownColor: Colors.black,
-              items: ["Male", "Female", "Other"]
-                  .map((g) => DropdownMenuItem(value: g, child: Text(g)))
-                  .toList(),
-              onChanged: (val) => setState(() => gender = val!),
-            ),
             const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () {
-                // Proceed to Home
-                Navigator.pushReplacementNamed(context, '/home');
-              },
-              child: const Text("Continue"),
+
+            // Username
+            _buildInputField(
+              controller: usernameController,
+              label: "Username",
+              icon: Icons.person_outline,
+            ),
+
+            const SizedBox(height: 16),
+
+            // Age
+            _buildInputField(
+              controller: ageController,
+              label: "Age",
+              icon: Icons.calendar_today_outlined,
+              inputType: TextInputType.number,
+            ),
+
+            const SizedBox(height: 16),
+
+            // Gender Dropdown
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: DropdownButtonFormField<String>(
+                value: gender,
+                icon: const Icon(Icons.arrow_drop_down),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  labelText: "Gender",
+                ),
+                items: ["Male", "Female", "Other"]
+                    .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                    .toList(),
+                onChanged: (val) => setState(() => gender = val!),
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Continue Button
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 2,
+                  backgroundColor: const Color(0xFF1A237E),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/home');
+                },
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),
@@ -111,15 +156,25 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     );
   }
 
-  InputDecoration _inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.white70),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white30),
-      ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType inputType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: inputType,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        prefixIcon: Icon(icon),
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }

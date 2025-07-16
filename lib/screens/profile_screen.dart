@@ -47,156 +47,221 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 🔹 Profile Info
-                Row(
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 42,
-                          backgroundImage: _image != null
-                              ? FileImage(_image!)
-                              : const AssetImage('assets/default_avatar.png')
-                          as ImageProvider,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: _pickImage,
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                                border: Border.all(color: Colors.black26),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/profile_bg.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 🔹 Profile Info
+                  Row(
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 42,
+                            backgroundImage: _image != null
+                                ? FileImage(_image!)
+                                : const AssetImage('assets/default_avatar.png')
+                            as ImageProvider,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.black26),
+                                ),
+                                child: const Icon(Icons.edit,
+                                    size: 16, color: Colors.black87),
                               ),
-                              child: const Icon(Icons.edit,
-                                  size: 16, color: Colors.black87),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Vivek Singh",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Vivek Singh",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                          const SizedBox(height: 4),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/editProfile');
+                            },
+                            child: const Text(
+                              "Tap to edit bio",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 🔸 Followers Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildStatItem("Followers", 132, () {
+                        Navigator.pushNamed(context, '/followers');
+                      }),
+                      _buildStatItem("Following", 89, () {
+                        Navigator.pushNamed(context, '/following');
+                      }),
+                      _buildStatItem("Sent", 22, () {
+                        Navigator.pushNamed(context, '/sent');
+                      }),
+                    ],
+                  ),
+
+                  const _VipPromoTile(),
+
+                  // 🔸 Agency & Add Host Row
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, '/agency'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Column(
+                              children: const [
+                                Icon(Icons.business_center, color: Colors.red),
+                                SizedBox(height: 6),
+                                Text('Agency',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/editProfile');
-                          },
-                          child: const Text(
-                            "Tap to edit bio",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontStyle: FontStyle.italic),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () =>
+                              Navigator.pushNamed(context, '/addHost'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            margin: const EdgeInsets.only(left: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Column(
+                              children: const [
+                                Icon(Icons.record_voice_over,
+                                    color: Colors.orange),
+                                SizedBox(height: 6),
+                                Text('Add host',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black)),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    )
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 16),
 
-                // 🔸 Followers Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildStatItem("Followers", 132, () {
-                      Navigator.pushNamed(context, '/followers');
-                    }),
-                    _buildStatItem("Following", 89, () {
-                      Navigator.pushNamed(context, '/following');
-                    }),
-                    _buildStatItem("Sent", 22, () {
-                      Navigator.pushNamed(context, '/sent');
-                    }),
-                  ],
-                ),
-
-                const _VipPromoTile(),
-
-                const _ProfileTile(
-                  icon: Icons.account_balance_wallet,
-                  title: "Wallet",
-                  titleColor: Colors.teal,
-                  trailingText: '0',
-                ),
-                const _ProfileTile(
-                  icon: Icons.monetization_on,
-                  title: "Earn Money",
-                  titleColor: Colors.indigo,
-                ),
-                const _ProfileTile(
-                  icon: Icons.redeem,
-                  title: "Get Rupees",
-                  showDot: true,
-                  titleColor: Colors.orange,
-                ),
-                const _ProfileTile(
-                  icon: Icons.message,
-                  title: "Messages",
-                  badge: '11',
-                  titleColor: Colors.purple,
-                ),
-                const _ProfileTile(
-                  icon: Icons.task_alt,
-                  title: "Task",
-                  badge: "Check In",
-                  titleColor: Colors.green,
-                ),
-                const _ProfileTile(
-                  icon: Icons.emoji_events,
-                  title: "Badge",
-                  titleColor: Colors.pink,
-                ),
-                const _ProfileTile(
-                  icon: Icons.security,
-                  title: "Account Security",
-                  titleColor: Colors.deepPurple,
-                ),
-                const _ProfileTile(
-                  icon: Icons.settings,
-                  title: "Settings",
-                  titleColor: Colors.brown,
-                ),
-              ],
+                  const _ProfileTile(
+                    icon: Icons.account_balance_wallet,
+                    title: "Wallet",
+                    titleColor: Colors.teal,
+                    trailingText: '0',
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.monetization_on,
+                    title: "Earn Money",
+                    titleColor: Colors.indigo,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.redeem,
+                    title: "Get Rupees",
+                    showDot: true,
+                    titleColor: Colors.orange,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.message,
+                    title: "Messages",
+                    badge: '11',
+                    titleColor: Colors.purple,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.task_alt,
+                    title: "Task",
+                    badge: "Check In",
+                    titleColor: Colors.green,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.emoji_events,
+                    title: "Badge",
+                    titleColor: Colors.pink,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.security,
+                    title: "Account Security",
+                    titleColor: Colors.deepPurple,
+                  ),
+                  const _ProfileTile(
+                    icon: Icons.settings,
+                    title: "Settings",
+                    titleColor: Colors.brown,
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // 🔘 Go to Full Profile
-          Positioned(
-            top: 70,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/fullProfile');
-              },
-              child: const Icon(Icons.arrow_forward_ios,
-                  size: 24, color: Colors.black87),
+            // 🔘 Go to Full Profile
+            Positioned(
+              top: 70,
+              right: 20,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/fullProfile');
+                },
+                child: const Icon(Icons.arrow_forward_ios,
+                    size: 24, color: Colors.black87),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

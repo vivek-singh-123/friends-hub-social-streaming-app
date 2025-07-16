@@ -63,32 +63,37 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }) {
     return Expanded(
       child: Container(
+        height: 50,
+        margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: PopupMenuButton<String>(
           onSelected: onSelected,
+          color: Colors.black, // dropdown background
           offset: const Offset(0, 48),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           itemBuilder: (context) => options
               .map((option) => PopupMenuItem<String>(
             value: option,
-            child: Text(option),
+            child: Text(
+              option,
+              style: const TextStyle(color: Colors.white),
+            ),
           ))
               .toList(),
-          child: Container(
-            height: 48,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(selectedValue, style: const TextStyle(fontSize: 14)),
-                const Icon(Icons.arrow_drop_down),
-              ],
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedValue,
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
+              ),
+              const Icon(Icons.arrow_drop_down, color: Colors.black),
+            ],
           ),
         ),
       ),
@@ -99,7 +104,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transactions', style: TextStyle(fontWeight: FontWeight.bold)),
+        title:
+        const Text('Transactions', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 1,
@@ -115,7 +121,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // 🔘 Filter Section 1 (Deposit + Time Range)
+            // 🔁 Filter Row 1: Bill + Asset
             Row(
               children: [
                 _buildPopupSelector(
@@ -126,22 +132,24 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
                 const SizedBox(width: 12),
                 _buildPopupSelector(
-                  title: "Time",
-                  options: timeRangeOptions,
-                  selectedValue: selectedTimeRange,
-                  onSelected: (val) => setState(() => selectedTimeRange = val),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // 🔘 Filter Section 2 (Asset + Category)
-            Row(
-              children: [
-                _buildPopupSelector(
                   title: "Asset",
                   options: assetOptions,
                   selectedValue: selectedAsset,
                   onSelected: (val) => setState(() => selectedAsset = val),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // 🔁 Filter Row 2: Time + Category
+            Row(
+              children: [
+                _buildPopupSelector(
+                  title: "Time",
+                  options: timeRangeOptions,
+                  selectedValue: selectedTimeRange,
+                  onSelected: (val) => setState(() => selectedTimeRange = val),
                 ),
                 const SizedBox(width: 12),
                 _buildPopupSelector(
@@ -152,12 +160,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                 ),
               ],
             ),
+
             const SizedBox(height: 24),
-            // 📜 Transactions List
+
+            // 📋 Transactions List
             Expanded(
               child: transactions.isEmpty
                   ? const Center(
-                child: Text("No transactions found", style: TextStyle(color: Colors.grey)),
+                child: Text(
+                  "No transactions found",
+                  style: TextStyle(color: Colors.grey),
+                ),
               )
                   : ListView.separated(
                 itemCount: transactions.length,
@@ -181,7 +194,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     child: ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: CircleAvatar(
-                        backgroundColor: isPositive ? Colors.green[50] : Colors.red[50],
+                        backgroundColor:
+                        isPositive ? Colors.green[50] : Colors.red[50],
                         child: Icon(
                           isPositive ? Icons.arrow_downward : Icons.arrow_upward,
                           color: isPositive ? Colors.green : Colors.red,
@@ -192,6 +206,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: Colors.black,
                         ),
                       ),
                       trailing: Text(

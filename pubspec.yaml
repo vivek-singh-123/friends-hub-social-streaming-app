@@ -31,6 +31,8 @@ flutter:
     - assets/cover_placeholder.png
     - assets/user.png
     - assets/icons/video.png
+    - assets/images/google_logo.png
+    - assets/images/profile_bg.jpg
 
     - assets/videos/video1.mp4
     - assets/videos/video2.mp4

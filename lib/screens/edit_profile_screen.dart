@@ -44,110 +44,150 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF3F4F6),
       appBar: AppBar(
-        title: Text("Edit Profile", style: GoogleFonts.roboto(color: Colors.black)),
-        centerTitle: true,
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         elevation: 1,
+        centerTitle: true,
+        title: Text(
+          "Edit Profile",
+          style: GoogleFonts.poppins(
+              fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 55,
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : const AssetImage('assets/default_avatar.png')
-                    as ImageProvider,
-                  ),
-                  Positioned(
-                    bottom: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: _pickImage,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.deepPurple,
-                          shape: BoxShape.circle,
+        padding: const EdgeInsets.all(20),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              // 🔹 Profile Image
+              Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.grey[300],
+                      backgroundImage: _image != null
+                          ? FileImage(_image!)
+                          : const AssetImage('assets/default_avatar.png')
+                      as ImageProvider,
+                    ),
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: GestureDetector(
+                        onTap: _pickImage,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.deepPurple,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.edit,
+                              size: 16, color: Colors.white),
                         ),
-                        child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            Text("Basic Info", style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            _buildTextField("Name", _nameController),
-            _buildDropdown("Gender", ["Male", "Female", "Other"], _selectedGender,
-                    (val) => setState(() => _selectedGender = val)),
-            _buildTextField("Birthday (DD/MM/YYYY)", _birthdayController),
-            _buildDropdown("Country/Region", ["India", "USA", "UK", "Canada", "Other"],
-                _selectedCountry, (val) => setState(() => _selectedCountry = val)),
-            _buildTextField("Bio", _bioController, maxLines: 3),
-
-            const SizedBox(height: 20),
-            Text("Social Links", style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            _buildTextField("Facebook Link", _facebookController),
-            _buildTextField("Instagram Link", _instagramController),
-            _buildTextField("Twitter Link", _twitterController),
-
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Profile Updated!")),
-                  );
-                  Navigator.pop(context);
-                },
-                icon: const Icon(Icons.save),
-                label: const Text("Save Changes"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+                  ],
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 30),
+
+              buildSectionTitle("Basic Info"),
+              _buildTextField("Name", _nameController),
+              _buildDropdown("Gender", ["Male", "Female", "Other"],
+                  _selectedGender, (val) => setState(() => _selectedGender = val)),
+              _buildTextField("Birthday (DD/MM/YYYY)", _birthdayController),
+              _buildDropdown("Country", ["India", "USA", "UK", "Canada", "Other"],
+                  _selectedCountry, (val) => setState(() => _selectedCountry = val)),
+              _buildTextField("Bio", _bioController, maxLines: 3),
+
+              const SizedBox(height: 20),
+              buildSectionTitle("Social Links"),
+              _buildTextField("Facebook Link", _facebookController),
+              _buildTextField("Instagram Link", _instagramController),
+              _buildTextField("Twitter Link", _twitterController),
+
+              const SizedBox(height: 30),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Profile Updated!")),
+                    );
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save Changes"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    textStyle: GoogleFonts.poppins(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1}) {
+  Widget buildSectionTitle(String title) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+          ),
+        ),
+        const SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller,
+      {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextField(
         controller: controller,
         maxLines: maxLines,
-        style: GoogleFonts.roboto(),
+        style: GoogleFonts.poppins(),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: GoogleFonts.roboto(),
+          labelStyle: GoogleFonts.poppins(),
           filled: true,
           fillColor: Colors.grey[100],
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
         ),
       ),
@@ -164,14 +204,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .map((item) => DropdownMenuItem(value: item, child: Text(item)))
             .toList(),
         onChanged: onChanged,
-        style: GoogleFonts.roboto(color: Colors.black),
+        style: GoogleFonts.poppins(color: Colors.black),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: GoogleFonts.roboto(),
+          labelStyle: GoogleFonts.poppins(),
           filled: true,
           fillColor: Colors.grey[100],
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.shade300),
           ),
         ),
       ),

@@ -28,6 +28,10 @@ import 'screens/followers_screen.dart';
 import 'screens/following_screen.dart';
 import 'screens/sent_screen.dart';
 
+// ✅ NEW: Agency & Add Host Screens
+import 'screens/agency_screen.dart';
+import 'screens/add_host_screen.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -81,6 +85,10 @@ class GoshLiveApp extends StatelessWidget {
         // ✅ Edit & Full Profile
         '/editProfile': (context) => const EditProfileScreen(),
         '/fullProfile': (context) => const FullProfileScreen(),
+
+        // ✅ NEW Screens
+        '/agency': (context) => const AgencyScreen(),
+        '/addHost': (context) => const AddHostScreen(),
       },
     );
   }
