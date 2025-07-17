@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:gosh_app/screens/live_screen.dart';
-import 'package:gosh_app/screens/post_screen.dart';
-import 'package:gosh_app/screens/discover_screen.dart';
-import 'package:gosh_app/screens/profile_screen.dart';
-import 'package:gosh_app/screens/wallet_screen.dart';
-import '../widgets/bottom_nav_bar.dart';
+import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
+
+import 'live_screen.dart';
+import 'post_screen.dart';
+import 'wallet_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,57 +13,43 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0; // ✅ Default to Live screen
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late TabController _tabController;
 
-  final List<Widget> _screens = [
-    const LiveScreen(),        // 0 - Live (light background)
-    const DiscoverScreen(),    // 1 - Discover (dark)
-    const PostScreen(),        // 2 - Post (dark)
-    WalletScreen(),            // 3 - Wallet (dark)
-    const ProfileScreen(),     // 4 - Profile (dark)
-  ];
-
-  void _onTabTapped(int index) {
-    setState(() => _currentIndex = index);
-  }
-
-  /// ✅ Dynamically set status bar style based on selected tab
-  SystemUiOverlayStyle _getStatusBarStyle() {
-    // Light background on LiveScreen -> dark icons
-    if (_currentIndex == 0) {
-      return const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark, // Black icons for white background
-        statusBarBrightness: Brightness.light,    // For iOS
-      );
-    } else {
-      // Dark backgrounds for other tabs -> white icons
-      return const SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.light, // White icons
-        statusBarBrightness: Brightness.dark,      // For iOS
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isPostScreen = _currentIndex == 2;
-
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: _getStatusBarStyle(),
-      child: Scaffold(
-        body: _screens[_currentIndex],
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            canvasColor: isPostScreen ? Colors.black : Colors.white,
-          ),
-          child: BottomNavBar(
-            currentIndex: _currentIndex,
-            onTap: _onTabTapped,
-          ),
-        ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: MotionTabBar(
+        tabBarColor: Colors.white,
+        tabIconColor: Colors.grey,
+        tabSelectedColor: Colors.purple,
+        textStyle: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+        initialSelectedTab: "Live",
+        labels: const ["Live", "Video", "Wallet", "Profile"],
+        icons: const [Icons.live_tv, Icons.video_library, Icons.account_balance_wallet, Icons.person],
+        tabSize: 50,
+        tabBarHeight: 55,
+        onTabItemSelected: (int index) {
+          setState(() {
+            _tabController.index = index;
+          });
+        },
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          LiveScreen(),     // 1: Live
+          PostScreen(),     // 2: Video
+          WalletScreen(),   // 3: Wallet
+          ProfileScreen(),  // 4: Profile
+        ],
       ),
     );
   }

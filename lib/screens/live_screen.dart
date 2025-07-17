@@ -25,11 +25,10 @@ class _LiveScreenState extends State<LiveScreen> {
   @override
   void initState() {
     super.initState();
-    // ✅ Set status bar style for white background
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.white,
-      statusBarIconBrightness: Brightness.dark, // Dark icons on white
-      statusBarBrightness: Brightness.light, // For iOS
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     ));
   }
 
@@ -43,39 +42,64 @@ class _LiveScreenState extends State<LiveScreen> {
           children: [
             const SizedBox(height: 8),
 
-            // 🔷 Top Tabs
+            // 🔷 Top Row: Scrollable Tabs + Fixed Discover Bar
             Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12, bottom: 10),
-              child: SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final isSelected = selectedIndex == index;
-                    return GestureDetector(
-                      onTap: () => onTabChanged(index),
-                      child: Container(
-                        margin: const EdgeInsets.only(right: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: isSelected ? Colors.black : Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: isSelected ? Colors.black : Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Text(
-                          categories[index],
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  // ⬅️ Scrollable Categories
+                  Expanded(
+                    flex: 3,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(categories.length, (index) {
+                          final isSelected = selectedIndex == index;
+                          return GestureDetector(
+                            onTap: () => onTabChanged(index),
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isSelected ? Colors.black : Colors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? Colors.black
+                                      : Colors.grey.shade300,
+                                ),
+                              ),
+                              child: Text(
+                                categories[index],
+                                style: TextStyle(
+                                  color: isSelected ? Colors.white : Colors.black87,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  // 🔍 Fixed Discover Bar
+                  Container(
+                    width: 75, // Adjusted width to better fit icon and invisible TextField
+                    height: 36,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(Icons.search, color: Colors.grey, size: 26), // Centered icon only
+                  ),
+
+                ],
               ),
             ),
 
@@ -96,7 +120,8 @@ class _LiveScreenState extends State<LiveScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => LivePlayerScreen(videoPath: videoPaths[index]),
+                          builder: (_) =>
+                              LivePlayerScreen(videoPath: videoPaths[index]),
                         ),
                       );
                     },
@@ -148,7 +173,7 @@ class LiveVideoCard extends StatelessWidget {
           ),
         ),
 
-        // 🟢 LIVE tag (bottom-left)
+        // 🟢 LIVE tag
         Positioned(
           bottom: 8,
           left: 8,
@@ -165,7 +190,7 @@ class LiveVideoCard extends StatelessWidget {
           ),
         ),
 
-        // 🔥 Views (bottom-right)
+        // 🔥 Views
         Positioned(
           bottom: 8,
           right: 8,
@@ -192,7 +217,6 @@ class LiveVideoCard extends StatelessWidget {
   }
 }
 
-// 🔴 Live Player Screen
 class LivePlayerScreen extends StatefulWidget {
   final String videoPath;
   const LivePlayerScreen({super.key, required this.videoPath});
@@ -209,11 +233,10 @@ class _LivePlayerScreenState extends State<LivePlayerScreen> {
   void initState() {
     super.initState();
 
-    // ✅ Set status bar style for dark background
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light, // White icons
-      statusBarBrightness: Brightness.dark, // For iOS
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
     ));
 
     _controller = VideoPlayerController.asset(widget.videoPath)

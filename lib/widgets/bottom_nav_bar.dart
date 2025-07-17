@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends StatefulWidget {
   final int currentIndex;
   final void Function(int) onTap;
 
@@ -11,18 +11,38 @@ class BottomNavBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final bool isPostScreen = currentIndex == 2;
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
 
-    // Dynamic color logic
-    Color getIconColor(int index) {
-      if (index == currentIndex) return Colors.green;
-      return isPostScreen ? Colors.white : Colors.black;
-    }
+class _BottomNavBarState extends State<BottomNavBar> {
+  List<bool> _isTappedList = List.generate(4, (_) => false);
+
+  void _onTap(int index) {
+    setState(() {
+      _isTappedList[index] = true;
+    });
+
+    Future.delayed(Duration(milliseconds: 200), () {
+      setState(() {
+        _isTappedList[index] = false;
+      });
+    });
+
+    widget.onTap(index);
+  }
+
+  Color _getIconColor(int index) {
+    if (index == widget.currentIndex) return Colors.green;
+    return widget.currentIndex == 1 ? Colors.white : Colors.black;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isPostScreen = widget.currentIndex == 1;
 
     return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
+      currentIndex: widget.currentIndex,
+      onTap: _onTap,
       backgroundColor: isPostScreen ? Colors.black : Colors.white,
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: true,
@@ -33,42 +53,46 @@ class BottomNavBar extends StatelessWidget {
       unselectedItemColor: isPostScreen ? Colors.white60 : Colors.grey,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.live_tv,
-            color: getIconColor(0),
+          icon: AnimatedScale(
+            scale: _isTappedList[0] ? 1.3 : 1.0,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: Icon(Icons.live_tv, color: _getIconColor(0)),
           ),
           label: "Live",
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.search,
-            color: getIconColor(1),
-          ),
-          label: "Discover",
-        ),
-        BottomNavigationBarItem(
-          icon: Image.asset(
-            'assets/icons/video.png',
-            height: 24,
-            color: currentIndex == 2
-                ? Colors.green
-                : isPostScreen
-                ? Colors.white
-                : Colors.black,
+          icon: AnimatedScale(
+            scale: _isTappedList[1] ? 1.3 : 1.0,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: Image.asset(
+              'assets/icons/video.png',
+              height: 24,
+              color: widget.currentIndex == 1
+                  ? Colors.green
+                  : isPostScreen
+                  ? Colors.white
+                  : Colors.black,
+            ),
           ),
           label: "Video",
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.account_balance_wallet,
-            color: getIconColor(3),
+          icon: AnimatedScale(
+            scale: _isTappedList[2] ? 1.3 : 1.0,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: Icon(Icons.account_balance_wallet, color: _getIconColor(2)),
           ),
           label: "Wallet",
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person,
-            color: getIconColor(4),
+          icon: AnimatedScale(
+            scale: _isTappedList[3] ? 1.3 : 1.0,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeOutBack,
+            child: Icon(Icons.person, color: _getIconColor(3)),
           ),
           label: "Profile",
         ),
