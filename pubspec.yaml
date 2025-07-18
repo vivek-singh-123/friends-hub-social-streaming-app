@@ -19,6 +19,7 @@ dependencies:
   google_fonts: ^6.1.0
   motion_tab_bar_v2: ^0.2.6
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

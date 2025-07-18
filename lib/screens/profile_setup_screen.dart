@@ -136,7 +136,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   elevation: 2,
-                  backgroundColor: const Color(0xFF1A237E),
+                  backgroundColor: const Color(0xFFFF6F00),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

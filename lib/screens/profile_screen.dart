@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:gosh_app/core/constant/constant.dart'; // For kPrimaryColor
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -157,10 +158,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               border: Border.all(color: Colors.black12),
                             ),
                             child: Column(
-                              children: const [
-                                Icon(Icons.business_center, color: Colors.red),
-                                SizedBox(height: 6),
-                                Text('Agency',
+                              children: [
+                                Icon(Icons.business_center, color: kPrimaryColor),
+                                const SizedBox(height: 6),
+                                const Text('Agency',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black)),
@@ -182,11 +183,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               border: Border.all(color: Colors.black12),
                             ),
                             child: Column(
-                              children: const [
-                                Icon(Icons.record_voice_over,
-                                    color: Colors.orange),
-                                SizedBox(height: 6),
-                                Text('Add host',
+                              children: [
+                                Icon(Icons.record_voice_over, color: kPrimaryColor),
+                                const SizedBox(height: 6),
+                                const Text('Add host',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black)),
@@ -203,46 +203,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const _ProfileTile(
                     icon: Icons.account_balance_wallet,
                     title: "Wallet",
-                    titleColor: Colors.teal,
+                    titleColor: kPrimaryColor,
                     trailingText: '0',
                   ),
                   const _ProfileTile(
                     icon: Icons.monetization_on,
                     title: "Earn Money",
-                    titleColor: Colors.indigo,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.redeem,
                     title: "Get Rupees",
                     showDot: true,
-                    titleColor: Colors.orange,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.message,
                     title: "Messages",
                     badge: '11',
-                    titleColor: Colors.purple,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.task_alt,
                     title: "Task",
                     badge: "Check In",
-                    titleColor: Colors.green,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.emoji_events,
                     title: "Badge",
-                    titleColor: Colors.pink,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.security,
                     title: "Account Security",
-                    titleColor: Colors.deepPurple,
+                    titleColor: kPrimaryColor,
                   ),
                   const _ProfileTile(
                     icon: Icons.settings,
                     title: "Settings",
-                    titleColor: Colors.brown,
+                    titleColor: kPrimaryColor,
                   ),
                 ],
               ),
@@ -267,7 +267,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-// 🌟 Custom Tile
 class _ProfileTile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -293,7 +292,7 @@ class _ProfileTile extends StatelessWidget {
       trailing = Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.red[600],
+          color: kPrimaryColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(badge!, style: const TextStyle(color: Colors.white)),
@@ -304,7 +303,7 @@ class _ProfileTile extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.bold),
       );
     } else if (showDot) {
-      trailing = const CircleAvatar(radius: 4, backgroundColor: Colors.red);
+      trailing = CircleAvatar(radius: 4, backgroundColor: kPrimaryColor);
     } else {
       trailing = const Icon(Icons.arrow_forward_ios,
           size: 14, color: Colors.grey);
@@ -364,11 +363,11 @@ class _VipPromoTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFFFFF3CD),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.amber, width: 1.2),
+          border: Border.all(color: kPrimaryColor, width: 1.2),
         ),
         child: Row(
           children: const [
-            Icon(Icons.star, color: Colors.amber),
+            Icon(Icons.star, color: kPrimaryColor),
             SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -385,7 +384,7 @@ class _VipPromoTile extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: Colors.orange,
+                color: kPrimaryColor,
               ),
             ),
           ],

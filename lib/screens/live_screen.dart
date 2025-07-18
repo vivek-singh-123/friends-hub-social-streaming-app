@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'discover_search_screen.dart';
 
 class LiveScreen extends StatefulWidget {
   const LiveScreen({super.key});
@@ -87,17 +88,26 @@ class _LiveScreenState extends State<LiveScreen> {
                   const SizedBox(width: 12),
 
                   // 🔍 Fixed Discover Bar
-                  Container(
-                    width: 75, // Adjusted width to better fit icon and invisible TextField
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const DiscoverSearchScreen()),
+                      );
+                    },
+                    child: Container(
+                      width: 75,
+                      height: 36,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.search, color: Colors.grey, size: 26),
                     ),
-                    alignment: Alignment.center,
-                    child: Icon(Icons.search, color: Colors.grey, size: 26), // Centered icon only
                   ),
+
 
                 ],
               ),

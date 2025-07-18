@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Color(0xFF1A1A2E)],
+            colors: [Color(0xFFFFA726), Color(0xFFFF7043)], // Orange theme
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -50,30 +50,33 @@ class _SplashScreenState extends State<SplashScreen>
         child: Center(
           child: ScaleTransition(
             scale: _animation,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.flash_on, color: Colors.deepPurpleAccent, size: 80),
-                SizedBox(height: 20),
-                Text(
-                  "Friends HUB",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                    color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.podcasts, color: Colors.white, size: 80),
+                  SizedBox(height: 20),
+                  Text(
+                    "Friends HUB",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "Go Live. Be Seen.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white70,
+                  SizedBox(height: 6),
+                  Text(
+                    "Go Live. Be Seen.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white70,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

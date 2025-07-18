@@ -53,8 +53,34 @@ class GoshLiveApp extends StatelessWidget {
     return MaterialApp(
       title: 'GOSH APP',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
+      theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
+        scaffoldBackgroundColor: Color(0xFFFFF3E0), // light orange background
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: Colors.deepOrange,
+          unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.white,
+          selectedIconTheme: IconThemeData(size: 28),
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.deepOrange,
+          foregroundColor: Colors.white,
+        ),
+        textTheme: ThemeData.light().textTheme.apply(
+          bodyColor: Colors.black87,
+          displayColor: Colors.black87,
+        ),
         useMaterial3: true,
       ),
       initialRoute: '/',
