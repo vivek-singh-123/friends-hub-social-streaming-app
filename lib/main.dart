@@ -3,6 +3,7 @@ import 'package:flutter/services.dart'; // ✅ Needed for SystemChrome
 import 'package:gosh_app/screens/edit_profile_screen.dart';
 import 'package:gosh_app/screens/vip_screen.dart';
 import 'package:gosh_app/screens/full_profile_screen.dart'; // ✅ NEW Import
+import 'package:gosh_app/screens/reset_password_screen.dart'; // Adjust 'gosh_app' if your project name is different
 
 // Splash/Login/Profile Setup
 import 'screens/splash_screen.dart';
@@ -92,7 +93,7 @@ class GoshLiveApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/wallet': (context) => WalletScreen(),
         '/creatorProfile': (context) => const CreatorProfileScreen(),
-
+        '/resetPassword': (context) => const ResetPasswordScreen(),
         // ✅ Profile Section Routes
         '/earn': (context) => const EarnMoneyScreen(),
         '/getRupees': (context) => const GetRupeesScreen(),
