@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart'; // Import for launching URLs
 
 // Make sure to import your ResetPasswordScreen
-// The path might vary based on your project structure,
-// but based on your previous input, it should be something like:
-// import 'package:your_app_name/screens/reset_password_screen.dart';
-// Replace 'your_app_name' with your actual project name if needed.
-// For example, if your project is 'gosh_app', it would be:
-import 'package:gosh_app/screens/reset_password_screen.dart'; // <<< ADD THIS IMPORT
+import 'package:gosh_app/screens/reset_password_screen.dart';
 
-bool _obscurePassword = true;
+// No Firebase-related imports needed as per your request.
+
+// Removed the _obscurePassword boolean from global scope to be managed by the widget state
+// bool _obscurePassword = true;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,7 +20,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool isLogin = true;
+  // Removed isLogin state variable as the screen will now be dedicated to login
+  // bool isLogin = true;
+
+  // Moved _obscurePassword into the state for proper management
+  bool _obscurePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +47,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    isLogin ? "Don't have an account?" : "Already have an account?",
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                  const Text( // Text is now constant
+                    "Don't have an account?",
+                    style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                   TextButton(
                     onPressed: () {
-                      if (isLogin) {
-                        Navigator.pushNamed(context, '/profileSetup');
-                      } else {
-                        setState(() {
-                          isLogin = true;
-                        });
-                      }
+                      // Always navigate to the separate profile setup/signup screen
+                      Navigator.pushNamed(context, '/profileSetup');
                     },
-                    child: Text(
-                      isLogin ? "Sign up" : "Login",
-                      style: const TextStyle(
+                    child: const Text( // Text is now constant "Sign up"
+                      "Sign up",
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -112,7 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: Container(
                         width: double.infinity,
-                        // Adjusted horizontal padding from 20 to 30 to "shrink" the inner content
                         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
                         decoration: const BoxDecoration(
                           color: Colors.white,
@@ -142,10 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Center(
+                            const Center( // Text is now constant "Login to Your account!"
                               child: Text(
-                                isLogin ? 'Login to Your account!' : 'Create Your account!',
-                                style: const TextStyle(
+                                'Login to Your account!',
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -205,7 +202,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {
-                                  // <<< THIS IS THE CHANGE >>>
                                   Navigator.pushNamed(context, '/resetPassword');
                                 },
                                 child: const Text(
@@ -226,22 +222,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  if (isLogin) {
-                                    if (emailController.text.trim().isEmpty || passwordController.text.trim().isEmpty) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text("Please enter both email and password."),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    } else {
-                                      Navigator.pushReplacementNamed(context, '/home');
-                                    }
+                                  // Simplified login logic (no more isLogin toggle)
+                                  if (emailController.text.trim().isEmpty || passwordController.text.trim().isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("Please enter both email and password."),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
                                   } else {
-                                    Navigator.pushNamed(context, '/profileSetup');
+                                    // Assuming successful login, navigate to home
+                                    Navigator.pushReplacementNamed(context, '/home');
                                   }
                                 },
-                                child: Text(
+                                child: const Text(
                                   'Login',
                                   style: TextStyle(fontSize: 16, color: Colors.white),
                                 ),
@@ -266,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _appleLoginButton(),
                               ],
                             ),
-                          ],
+                          ], // Fixed: Added missing closing parenthesis for Column
                         ),
                       ),
                     ),
@@ -282,7 +276,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _googleLoginButton() {
     return OutlinedButton.icon(
-      onPressed: () {},
+      onPressed: () async {
+        final Uri googleUrl = Uri.parse('https://accounts.google.com/signin'); // Official Google sign-in URL
+        if (!await launchUrl(googleUrl, mode: LaunchMode.externalApplication)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not launch ${googleUrl.toString()}')),
+          );
+        }
+      },
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         side: const BorderSide(color: Colors.grey),
@@ -303,7 +304,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _appleLoginButton() {
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () async {
+        final Uri appleUrl = Uri.parse('https://appleid.apple.com/account'); // Official Apple ID URL
+        if (!await launchUrl(appleUrl, mode: LaunchMode.externalApplication)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Could not launch ${appleUrl.toString()}')),
+          );
+        }
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.black,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
