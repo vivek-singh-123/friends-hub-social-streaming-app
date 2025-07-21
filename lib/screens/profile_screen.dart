@@ -74,20 +74,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildStatItem(String label, int value, VoidCallback onTap) {
-    return Expanded( // Use Expanded to ensure even spacing in Row
+    return Expanded(
+      // Use Expanded to ensure even spacing in Row
       child: GestureDetector(
         onTap: onTap,
-        child: Card( // Wrap in Card for enhanced UI
-          margin: const EdgeInsets.symmetric(horizontal: 4), // Small horizontal margin between cards
+        child: Card(
+          // Wrap in Card for enhanced UI
+          margin:
+          const EdgeInsets.symmetric(horizontal: 4), // Small horizontal margin between cards
           elevation: 2, // Subtle shadow
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8), // Adjusted padding
+            padding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 8), // Adjusted padding
             child: Column(
               children: [
                 Text(
                   '$value',
-                  style: GoogleFonts.poppins( // Use GoogleFonts
+                  style: GoogleFonts.poppins(
+                    // Use GoogleFonts
                     fontSize: 18, // Slightly larger
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
@@ -116,7 +121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Stack( // This is the main Stack that allows fixed positioning
+        child: Stack(
+          // This is the main Stack that allows fixed positioning
           children: [
             SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
@@ -128,7 +134,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Stack(
                         children: [
-                          Container( // Container for white border and shadow
+                          Container(
+                            // Container for white border and shadow
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: Colors.white, // White background for border
@@ -173,9 +180,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text( // Use _userName from state
+                          Text(
+                            // Use _userName from state
                             _userName,
-                            style: GoogleFonts.poppins( // Use GoogleFonts
+                            style: GoogleFonts.poppins(
+                              // Use GoogleFonts
                               fontSize: 22, // Slightly larger
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -183,7 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizedBox(height: 6), // Increased spacing
                           GestureDetector(
-                            onTap: () async { // Made async to await the navigation result
+                            onTap: () async {
+                              // Made async to await the navigation result
                               // Navigate to EditProfileScreen and wait for it to pop
                               await Navigator.pushNamed(context, '/editProfile');
                               // When EditProfileScreen is popped, reload profile data
@@ -191,7 +201,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             },
                             child: Text(
                               "Tap to edit bio",
-                              style: GoogleFonts.poppins( // Use GoogleFonts
+                              style: GoogleFonts.poppins(
+                                // Use GoogleFonts
                                   fontSize: 14,
                                   color: Colors.grey[700], // Darker grey
                                   fontStyle: FontStyle.italic),
@@ -230,7 +241,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () => Navigator.pushNamed(context, '/agency'),
-                          child: Card( // Wrap in Card for enhanced UI
+                          child: Card(
+                            // Wrap in Card for enhanced UI
                             elevation: 2,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             margin: const EdgeInsets.only(right: 8),
@@ -238,10 +250,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               child: Column(
                                 children: [
-                                  Icon(Icons.business_center, color: kPrimaryColor, size: 28), // Larger icon
+                                  Icon(Icons.business_center,
+                                      color: kPrimaryColor, size: 28), // Larger icon
                                   const SizedBox(height: 8), // Increased spacing
                                   Text('Agency',
-                                      style: GoogleFonts.poppins( // Use GoogleFonts
+                                      style: GoogleFonts.poppins(
+                                        // Use GoogleFonts
                                           fontWeight: FontWeight.w600, // Bolder
                                           color: Colors.black87,
                                           fontSize: 15)),
@@ -253,9 +267,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Expanded(
                         child: GestureDetector(
-                          onTap: () =>
-                              Navigator.pushNamed(context, '/addHost'),
-                          child: Card( // Wrap in Card for enhanced UI
+                          onTap: () => Navigator.pushNamed(context, '/addHost'),
+                          child: Card(
+                            // Wrap in Card for enhanced UI
                             elevation: 2,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             margin: const EdgeInsets.only(left: 8),
@@ -263,10 +277,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               child: Column(
                                 children: [
-                                  Icon(Icons.record_voice_over, color: kPrimaryColor, size: 28), // Larger icon
+                                  Icon(Icons.record_voice_over,
+                                      color: kPrimaryColor, size: 28), // Larger icon
                                   const SizedBox(height: 8), // Increased spacing
                                   Text('Add host',
-                                      style: GoogleFonts.poppins( // Use GoogleFonts
+                                      style: GoogleFonts.poppins(
+                                        // Use GoogleFonts
                                           fontWeight: FontWeight.w600, // Bolder
                                           color: Colors.black87,
                                           fontSize: 15)),
@@ -282,10 +298,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 24), // Increased spacing
 
                   // Profile Tiles
-                  _buildProfileTile(Icons.account_balance_wallet, "Wallet", trailingText: '0'),
+                  _buildProfileTile(Icons.account_balance_wallet, "Wallet",
+                      trailingText: '0'), // Wallet tile remains here
                   _buildProfileTile(Icons.monetization_on, "Earn Money"),
                   _buildProfileTile(Icons.redeem, "Get Rupees", showDot: true),
-                  _buildProfileTile(Icons.message, "Messages", badge: '11'),
+                  // Removed Messages tile from here
                   _buildProfileTile(Icons.task_alt, "Task", badge: "Check In"),
                   _buildProfileTile(Icons.emoji_events, "Badge"),
                   _buildProfileTile(Icons.security, "Account Security"),
@@ -302,7 +319,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.pushNamed(context, '/fullProfile');
                 },
-                child: Container( // Added container for background and padding
+                child: Container(
+                  // Added container for background and padding
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.8), // Semi-transparent background
@@ -338,25 +356,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: kPrimaryColor,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(badge, style: GoogleFonts.poppins(color: Colors.white, fontSize: 13)), // Styled text
+        child: Text(badge,
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 13)), // Styled text
       );
     } else if (trailingText != null) {
       trailing = Text(
         trailingText,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 14), // Styled text
+        style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold, color: Colors.black87, fontSize: 14), // Styled text
       );
     } else if (showDot) {
       trailing = CircleAvatar(radius: 4, backgroundColor: kPrimaryColor);
     } else {
-      trailing = const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey); // Slightly larger icon
+      trailing = const Icon(Icons.arrow_forward_ios,
+          size: 16, color: Colors.grey); // Slightly larger icon
     }
 
-    return Card( // Wrap ListTile in Card
+    return Card(
+      // Wrap ListTile in Card
       margin: const EdgeInsets.only(bottom: 12), // Spacing between cards
       elevation: 1, // Subtle shadow
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Adjusted padding
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Adjusted padding
         leading: Icon(icon, color: kPrimaryColor, size: 26), // Use kPrimaryColor, larger icon
         title: Text(
           title,
@@ -375,9 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             case 'Get Rupees':
               Navigator.pushNamed(context, '/getRupees');
               break;
-            case 'Messages':
-              Navigator.pushNamed(context, '/messages');
-              break;
+          // Removed Messages case from here
             case 'Task':
               Navigator.pushNamed(context, '/task');
               break;
@@ -420,7 +441,8 @@ class _VipPromoTile extends StatelessWidget {
             Expanded(
               child: Text(
                 'Join Friends HUB VIP',
-                style: GoogleFonts.poppins( // Use GoogleFonts
+                style: GoogleFonts.poppins(
+                  // Use GoogleFonts
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: Colors.black,
@@ -429,7 +451,8 @@ class _VipPromoTile extends StatelessWidget {
             ),
             Text(
               'Join',
-              style: GoogleFonts.poppins( // Use GoogleFonts
+              style: GoogleFonts.poppins(
+                // Use GoogleFonts
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 color: kPrimaryColor,

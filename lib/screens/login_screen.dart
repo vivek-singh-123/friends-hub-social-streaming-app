@@ -5,11 +5,6 @@ import 'package:url_launcher/url_launcher.dart'; // Import for launching URLs
 // Make sure to import your ResetPasswordScreen
 import 'package:gosh_app/screens/reset_password_screen.dart';
 
-// No Firebase-related imports needed as per your request.
-
-// Removed the _obscurePassword boolean from global scope to be managed by the widget state
-// bool _obscurePassword = true;
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -20,10 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  // Removed isLogin state variable as the screen will now be dedicated to login
-  // bool isLogin = true;
 
-  // Moved _obscurePassword into the state for proper management
   bool _obscurePassword = true;
 
   @override
@@ -47,16 +39,15 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text( // Text is now constant
+                  const Text(
                     "Don't have an account?",
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                   TextButton(
                     onPressed: () {
-                      // Always navigate to the separate profile setup/signup screen
                       Navigator.pushNamed(context, '/profileSetup');
                     },
-                    child: const Text( // Text is now constant "Sign up"
+                    child: const Text(
                       "Sign up",
                       style: TextStyle(
                         color: Colors.white,
@@ -139,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            const Center( // Text is now constant "Login to Your account!"
+                            const Center(
                               child: Text(
                                 'Login to Your account!',
                                 style: TextStyle(
@@ -222,8 +213,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  // Simplified login logic (no more isLogin toggle)
-                                  if (emailController.text.trim().isEmpty || passwordController.text.trim().isEmpty) {
+                                  if (emailController.text.trim().isEmpty ||
+                                      passwordController.text.trim().isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         content: Text("Please enter both email and password."),
@@ -231,8 +222,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     );
                                   } else {
-                                    // Assuming successful login, navigate to home
-                                    Navigator.pushReplacementNamed(context, '/home');
+                                    // ✅ FIXED: No back stack issue anymore
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      '/home',
+                                          (route) => false,
+                                    );
                                   }
                                 },
                                 child: const Text(
@@ -260,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _appleLoginButton(),
                               ],
                             ),
-                          ], // Fixed: Added missing closing parenthesis for Column
+                          ],
                         ),
                       ),
                     ),
@@ -277,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _googleLoginButton() {
     return OutlinedButton.icon(
       onPressed: () async {
-        final Uri googleUrl = Uri.parse('https://accounts.google.com/signin'); // Official Google sign-in URL
+        final Uri googleUrl = Uri.parse('https://accounts.google.com/signin');
         if (!await launchUrl(googleUrl, mode: LaunchMode.externalApplication)) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Could not launch ${googleUrl.toString()}')),
@@ -305,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _appleLoginButton() {
     return ElevatedButton.icon(
       onPressed: () async {
-        final Uri appleUrl = Uri.parse('https://appleid.apple.com/account'); // Official Apple ID URL
+        final Uri appleUrl = Uri.parse('https://appleid.apple.com/account');
         if (!await launchUrl(appleUrl, mode: LaunchMode.externalApplication)) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Could not launch ${appleUrl.toString()}')),

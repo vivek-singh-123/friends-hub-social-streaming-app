@@ -4,6 +4,7 @@ import 'package:gosh_app/screens/edit_profile_screen.dart';
 import 'package:gosh_app/screens/vip_screen.dart';
 import 'package:gosh_app/screens/full_profile_screen.dart'; // ✅ NEW Import
 import 'package:gosh_app/screens/reset_password_screen.dart'; // Adjust 'gosh_app' if your project name is different
+import 'package:gosh_app/screens/welcome_screen.dart';
 
 // Splash/Login/Profile Setup
 import 'screens/splash_screen.dart';
@@ -84,10 +85,12 @@ class GoshLiveApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      // ✅ FIXED: only keep one initialRoute
       initialRoute: '/',
       routes: {
         // ✅ Core Routes
         '/': (context) => const SplashScreen(),
+        '/welcome': (context) => const WelcomeScreen(), // ✅ New route
         '/login': (context) => const LoginScreen(),
         '/profileSetup': (context) => const ProfileSetupScreen(),
         '/home': (context) => const HomeScreen(),

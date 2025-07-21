@@ -11,7 +11,7 @@ class LiveScreen extends StatefulWidget {
 }
 
 class _LiveScreenState extends State<LiveScreen> {
-  final List<String> categories = ["Following", "Popular", "Hot", "Recently"];
+  final List<String> categories = ["Freshers", "Popular", "Spotlight", "Party", "PK Matches"];
   int selectedIndex = 1;
 
   final List<String> videoPaths = List.generate(

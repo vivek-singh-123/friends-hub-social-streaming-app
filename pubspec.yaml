@@ -20,6 +20,8 @@ dependencies:
   motion_tab_bar_v2: ^0.2.6
   shared_preferences: ^2.2.0
   url_launcher: ^6.3.0
+  font_awesome_flutter: ^10.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -33,9 +35,16 @@ flutter:
     - assets/default_avatar.png
     - assets/cover_placeholder.png
     - assets/user.png
-    - assets/icons/video.png
+    - assets/logo.png
     - assets/images/google_logo.png
     - assets/images/profile_bg.jpg
+    - assets/background.jpg
+
+    - assets/icons/live.png
+    - assets/icons/shorts.png
+    - assets/icons/upload.png
+    - assets/icons/message.png
+    - assets/icons/me.png
 
     - assets/videos/video1.mp4
     - assets/videos/video2.mp4
