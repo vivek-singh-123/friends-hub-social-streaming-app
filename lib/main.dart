@@ -19,11 +19,12 @@ import 'screens/wallet_screen.dart';
 // Profile Subpages
 import 'screens/earn_money_screen.dart';
 import 'screens/get_rupees_screen.dart';
-import 'screens/messages_screen.dart';
+// import 'screens/messages_screen.dart'; // No longer needed as a direct route
 import 'screens/task_screen.dart';
 import 'screens/badge_screen.dart';
 import 'screens/account_security_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/terms_and_privacy_screen.dart'; // Make sure this is imported if it's a separate screen
 
 // Top Profile Stats Screens
 import 'screens/followers_screen.dart';
@@ -57,8 +58,8 @@ class GoshLiveApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
-        scaffoldBackgroundColor: Color(0xFFFFF3E0), // light orange background
-        appBarTheme: AppBarTheme(
+        scaffoldBackgroundColor: const Color(0xFFFFF3E0), // light orange background
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.deepOrange,
           foregroundColor: Colors.white,
           elevation: 0,
@@ -69,13 +70,13 @@ class GoshLiveApp extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor: Colors.deepOrange,
           unselectedItemColor: Colors.grey,
           backgroundColor: Colors.white,
           selectedIconTheme: IconThemeData(size: 28),
         ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.deepOrange,
           foregroundColor: Colors.white,
         ),
@@ -90,35 +91,35 @@ class GoshLiveApp extends StatelessWidget {
       routes: {
         // ✅ Core Routes
         '/': (context) => const SplashScreen(),
-        '/welcome': (context) => const WelcomeScreen(), // ✅ New route
+        '/welcome': (context) => const WelcomeScreen(),
         '/login': (context) => const LoginScreen(),
         '/profileSetup': (context) => const ProfileSetupScreen(),
         '/home': (context) => const HomeScreen(),
-        '/wallet': (context) => WalletScreen(),
-        '/creatorProfile': (context) => const CreatorProfileScreen(),
-        '/resetPassword': (context) => const ResetPasswordScreen(),
+        '/wallet': (context) => WalletScreen(), // Removed 'const' keyword
+        '/creatorProfile': (context) => CreatorProfileScreen(), // Removed 'const' keyword
+        '/resetPassword': (context) => ResetPasswordScreen(), // Removed 'const' keyword
         // ✅ Profile Section Routes
-        '/earn': (context) => const EarnMoneyScreen(),
-        '/getRupees': (context) => const GetRupeesScreen(),
-        '/messages': (context) => const MessagesScreen(),
-        '/task': (context) => const TaskScreen(),
-        '/badge': (context) => const BadgeScreen(),
-        '/accountSecurity': (context) => const AccountSecurityScreen(),
-        '/settings': (context) => const SettingsScreen(),
-        '/vip': (context) => const VipScreen(),
+        '/earn': (context) => EarnMoneyScreen(), // Removed 'const' keyword
+        '/getRupees': (context) => GetRupeesScreen(), // Removed 'const' keyword
+        '/task': (context) => TaskScreen(), // Removed 'const' keyword
+        '/badge': (context) => BadgeScreen(), // Removed 'const' keyword
+        '/accountSecurity': (context) => AccountSecurityScreen(), // Removed 'const' keyword
+        '/settings': (context) => SettingsScreen(), // Removed 'const' keyword
+        '/vip': (context) => VipScreen(), // Removed 'const' keyword
+        '/termsAndPrivacy': (context) => const TermsAndPrivacyScreen(), // This one can remain const if it's a StatelessWidget with only const fields
 
         // ✅ Top Stats Routes
-        '/followers': (context) => const FollowersScreen(),
-        '/following': (context) => const FollowingScreen(),
-        '/sent': (context) => const SentScreen(),
+        '/followers': (context) => FollowersScreen(), // Removed 'const' keyword
+        '/following': (context) => FollowingScreen(), // Removed 'const' keyword
+        '/sent': (context) => SentScreen(), // Removed 'const' keyword
 
         // ✅ Edit & Full Profile
-        '/editProfile': (context) => const EditProfileScreen(),
-        '/fullProfile': (context) => const FullProfileScreen(),
+        '/editProfile': (context) => EditProfileScreen(), // Removed 'const' keyword
+        '/fullProfile': (context) => FullProfileScreen(), // Removed 'const' keyword
 
         // ✅ NEW Screens
-        '/agency': (context) => const AgencyScreen(),
-        '/addHost': (context) => const AddHostScreen(),
+        '/agency': (context) => AgencyScreen(), // Removed 'const' keyword
+        '/addHost': (context) => AddHostScreen(), // Removed 'const' keyword
       },
     );
   }

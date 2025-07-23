@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/gestures.dart'; // Added for TapGestureRecognizer
+import 'package:flutter/gestures.dart';
+// Import the dedicated TermsAndPrivacyScreen
+import 'package:gosh_app/screens/terms_and_privacy_screen.dart'; // Assuming this path
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -37,15 +39,14 @@ class WelcomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // App Logo
-                    // Assuming 'assets/logo.png' is your app logo based on your pubspec
                     Image.asset(
                       'assets/logo.png',
-                      width: 150,
-                      height: 150,
+                      width: 200,
+                      height: 160,
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Friends HUB', // ✅ Updated text as per your latest code
+                      '',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 34,
@@ -69,68 +70,94 @@ class WelcomeScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // ✅ Navigate to the LoginScreen
                           Navigator.pushNamed(context, '/login');
-                          print('Navigating to Login Screen from Google button');
+                          debugPrint('Navigating to Login Screen from Google button');
                         },
                         icon: const Icon(FontAwesomeIcons.google, color: Colors.red),
                         label: const Text(
                           'Log in with Google',
                           style: TextStyle(fontSize: 18, color: Colors.black),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.grey.shade200;
+                              }
+                              return Colors.white;
+                            },
+                          ),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 15),
 
-                    // Log in with Facebook Button (no change in navigation for now)
+                    // Log in with Facebook Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // TODO: Implement Facebook Login or navigate to a specific Facebook login flow
-                          print('Log in with Facebook');
+                          Navigator.pushNamed(context, '/login');
+                          debugPrint('Navigating to Login Screen from Facebook button');
                         },
                         icon: const Icon(FontAwesomeIcons.facebook, color: Colors.white),
                         label: const Text(
                           'Log in with Facebook',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[700],
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.blue[900];
+                              }
+                              return Colors.blue[700];
+                            },
+                          ),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 15),
 
-                    // Log in with Truecaller Button (no change in navigation for now)
+                    // Log in with Truecaller Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // TODO: Implement Truecaller Login or navigate to a specific Truecaller login flow
-                          print('Log in with Truecaller');
+                          Navigator.pushNamed(context, '/login');
+                          debugPrint('Navigating to Login Screen from Truecaller button');
                         },
                         icon: const Icon(FontAwesomeIcons.phoneFlip, color: Colors.blue),
                         label: const Text(
                           'Log in with Truecaller',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightBlue[400],
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.pressed)) {
+                                return Colors.lightBlue[700];
+                              }
+                              return Colors.lightBlue[400];
+                            },
+                          ),
+                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
@@ -152,8 +179,12 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                // TODO: Add navigation or show dialog for terms
-                                print('Navigate to Terms & Privacy Policy');
+                                // Navigate to the dedicated TermsAndPrivacyScreen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const TermsAndPrivacyScreen()),
+                                );
+                                debugPrint('Navigating to dedicated Terms & Privacy Policy screen');
                               },
                           ),
                           const TextSpan(text: '.'),

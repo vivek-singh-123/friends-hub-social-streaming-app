@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'dart:async'; // Import for Timer
 
-// Your screen imports (ensure these paths are correct)
+// Your screen imports
 import 'live_screen.dart';
-import 'post_screen.dart'; // Corresponds to "Shorts"
-import 'upload_screen.dart'; // Corresponds to the "Upload" / middle button
-import 'messages_screen.dart';
+import 'post_screen.dart';
+import 'upload_screen.dart';
+import 'messages_screen.dart'; // Import the updated MessagesScreen
 import 'profile_screen.dart';
 
-// Import your custom BottomNavBar (ensure this path is correct relative to main.dart)
+// Import your custom BottomNavBar
 import 'package:gosh_app/widgets/bottom_nav_bar.dart';
 
 // Assuming kPrimaryColor or vibrantPink might be defined here, though not directly used in HomeScreen now
@@ -22,22 +23,32 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _currentIndex = 0; // State to track the currently selected tab index
+  int _currentIndex = 0;
+
+  // Create and own the ValueNotifier for the total unread message count
+  // Initialize it with the static total unread count from MessagesScreen
+  final ValueNotifier<int> _totalUnreadMessagesNotifier = ValueNotifier<int>(MessagesScreen.getStaticTotalUnreadCount());
+
+  // Timer for simulating new messages, now in HomeScreen
+  Timer? _messageSimulationTimer;
 
   // Screens in the order they appear in the BottomNavBar
-  final List<Widget> _screens = [
-    const LiveScreen(),      // Index 0: Live
-    const PostScreen(),      // Index 1: Shorts
-    const UploadScreen(),    // Index 2: Video Upload (now a regular tab)
-    const MessagesScreen(),  // Index 3: Message
-    const ProfileScreen(),   // Index 4: Me
-  ];
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _screens.length, vsync: this);
-    _tabController.index = _currentIndex; // Initialize TabController's index
+    _tabController = TabController(length: 5, vsync: this); // 5 tabs
+    _tabController.index = _currentIndex;
+
+    _screens = [
+      const LiveScreen(),
+      const PostScreen(),
+      const UploadScreen(),
+      // Pass the ValueNotifier to MessagesScreen
+      MessagesScreen(totalUnreadCountNotifier: _totalUnreadMessagesNotifier),
+      const ProfileScreen(),
+    ];
 
     _tabController.addListener(() {
       if (_tabController.index != _currentIndex) {
@@ -45,21 +56,41 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           _currentIndex = _tabController.index;
         });
       }
-      // No special print for index 2 needed here, as it's now a regular tab.
+    });
+
+    // Start the message simulation timer here
+    _messageSimulationTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _simulateNewMessageInHome();
     });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _totalUnreadMessagesNotifier.dispose(); // Dispose the notifier when HomeScreen is disposed
+    _messageSimulationTimer?.cancel(); // Cancel the timer when HomeScreen is disposed
     super.dispose();
   }
 
+  // This method simulates new messages and updates the notifier
+  void _simulateNewMessageInHome() {
+    // Get the list of senders using the public static getter
+    final List<String> senders = MessagesScreen.getSenderNames(); // ✅ Changed to use public getter
+    if (senders.isEmpty) return; // Avoid error if no senders
+
+    final randomSenderIndex = DateTime.now().millisecondsSinceEpoch % senders.length;
+    final sender = senders[randomSenderIndex];
+
+    // Use the static method to increment the count
+    MessagesScreen.incrementUnreadCountForSender(sender);
+
+    // Update the ValueNotifier to trigger rebuild of BottomNavBar
+    _totalUnreadMessagesNotifier.value = MessagesScreen.getStaticTotalUnreadCount();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    // Note: vibrantPink is now only used in BottomNavBar for selection colors
-    // const Color vibrantPink = Color(0xFFEA016B);
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: TabBarView(
@@ -67,17 +98,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         physics: const NeverScrollableScrollPhysics(), // Prevents horizontal swiping
         children: _screens,
       ),
-      // --- FloatingActionButton is REMOVED ---
-      // floatingActionButton: FloatingActionButton( ... ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // --- END REMOVAL ---
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            _tabController.animateTo(index); // Animate to the selected tab
-          });
+      // Use ValueListenableBuilder to listen to changes in the notifier
+      bottomNavigationBar: ValueListenableBuilder<int>(
+        valueListenable: _totalUnreadMessagesNotifier,
+        builder: (context, totalUnreadMessages, child) {
+          return BottomNavBar(
+            currentIndex: _currentIndex,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+                _tabController.animateTo(index);
+              });
+            },
+            messagesUnreadCount: totalUnreadMessages, // Pass the dynamic count to BottomNavBar
+          );
         },
       ),
     );

@@ -4,11 +4,13 @@ import 'package:gosh_app/core/constant/constant.dart'; // Ensure this path is co
 class BottomNavBar extends StatefulWidget {
   final int currentIndex;
   final void Function(int) onTap;
+  final int messagesUnreadCount; // This parameter will receive the dynamic count
 
   const BottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
+    this.messagesUnreadCount = 0, // Default to 0 if not provided
   });
 
   @override
@@ -102,31 +104,33 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 clipBehavior: Clip.none, // Allow badge to overflow
                 children: [
                   iconWidget, // The base message icon
-                  Positioned(
-                    right: -8, // Adjust position for the badge
-                    top: -4, // Adjust position for the badge
-                    child: Container(
-                      padding: const EdgeInsets.all(1.5), // Reduced padding for badge
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.white, width: 1),
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18, // Smaller minWidth for badge
-                        minHeight: 18, // Smaller minHeight for badge
-                      ),
-                      child: const Text(
-                        '99+',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 9, // Smaller font size for badge
-                          fontWeight: FontWeight.bold,
+                  // Dynamic Badge for Message tab
+                  if (widget.messagesUnreadCount > 0) // Only show if count > 0
+                    Positioned(
+                      right: -8, // Adjust position for the badge
+                      top: -4, // Adjust position for the badge
+                      child: Container(
+                        padding: const EdgeInsets.all(1.5), // Reduced padding for badge
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.white, width: 1),
                         ),
-                        textAlign: TextAlign.center,
+                        constraints: const BoxConstraints(
+                          minWidth: 18, // Smaller minWidth for badge
+                          minHeight: 18, // Smaller minHeight for badge
+                        ),
+                        child: Text(
+                          widget.messagesUnreadCount > 99 ? '99+' : widget.messagesUnreadCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9, // Smaller font size for badge
+                            fontWeight: FontWeight.w500, // Changed to w500 for consistency
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               );
             }
