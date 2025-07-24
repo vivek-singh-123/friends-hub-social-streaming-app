@@ -11,8 +11,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   // Removed _notificationsEnabled as the option is removed
-  bool _hideFavorites = false;
-  bool _hideLikes = false;
+  // Removed _hideFavorites and _hideLikes as the section is removed
   int _selectedRating = 0;
 
   @override
@@ -34,41 +33,46 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildSectionTitle('Privacy Settings'),
-          _buildCard([
-            _buildSwitchTile('Hide my favorites', _hideFavorites,
-                    (val) => setState(() => _hideFavorites = val)),
-            _buildSwitchTile('Hide my likes', _hideLikes,
-                    (val) => setState(() => _hideLikes = val)),
-          ]),
+          // --- Removed Section Starts Here ---
+          // _buildSectionTitle('Privacy Settings'),
+          // _buildCard([
+          //   _buildSwitchTile('Hide my favorites', _hideFavorites,
+          //           (val) => setState(() => _hideFavorites = val)),
+          //   _buildSwitchTile('Hide my likes', _hideLikes,
+          //           (val) => setState(() => _hideLikes = val)),
+          // ]),
 
-          const SizedBox(height: 20), // Increased spacing
-          _buildCard([
-            _buildListTile('Privilege Setting', onTap: () {
-              // Added functionality for Privilege Setting
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Privilege settings tapped!', style: GoogleFonts.poppins()),
-                  backgroundColor: Colors.blueAccent,
-                ),
-              );
-              // You can navigate to a new screen or show a dialog here
-            }),
-          ]),
+          // const SizedBox(height: 20),
+          // _buildCard([
+          //   _buildListTile('Privilege Setting', onTap: () {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: Text('Privilege settings tapped!', style: GoogleFonts.poppins()),
+          //         backgroundColor: Colors.blueAccent,
+          //       ),
+          //     );
+          //   }),
+          // ]),
 
-          const SizedBox(height: 20), // Increased spacing
-          _buildCard([
-            _buildListTile('Clear Cache', onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Cache cleared', style: GoogleFonts.poppins()),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }, leadingIcon: Icons.delete_outline), // Added leading icon
-          ]),
+          // const SizedBox(height: 20),
+          // _buildCard([
+          //   _buildListTile('Clear Cache', onTap: () {
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       SnackBar(
+          //         content: Text('Cache cleared', style: GoogleFonts.poppins()),
+          //         backgroundColor: Colors.green,
+          //       ),
+          //     );
+          //   }, leadingIcon: Icons.delete_outline),
+          // ]),
+          // --- Removed Section Ends Here ---
 
-          const SizedBox(height: 20), // Increased spacing
+
+          // The SizedBox below this comment was previously _after_ the "Clear Cache" section,
+          // so it effectively acts as the top padding for the "About Us" section now.
+          // You might adjust this padding if the spacing looks off.
+          const SizedBox(height: 20),
+
           _buildSectionTitle('About Us'),
           _buildCard([
             Center(
@@ -140,15 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSwitchTile(String title, bool value, ValueChanged<bool> onChanged) {
-    return SwitchListTile(
-      title: Text(title, style: GoogleFonts.poppins(fontSize: 16, color: Colors.black87)), // Styled text
-      value: value,
-      onChanged: onChanged,
-      activeColor: Colors.deepPurple, // Consistent color
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), // Adjusted padding
-    );
-  }
+  // Removed _buildSwitchTile as it's no longer used
 
   Widget _buildListTile(String title, {VoidCallback? onTap, IconData? leadingIcon}) {
     return ListTile(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 
 class EarnMoneyScreen extends StatelessWidget {
   const EarnMoneyScreen({super.key});
@@ -34,29 +35,50 @@ class EarnMoneyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F2F5), // Light grey background
       appBar: AppBar(
-        title: const Text('Earn Money'),
+        title: Text(
+          'Earn Money',
+          style: GoogleFonts.poppins(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600), // White text for orange app bar
+        ),
+        backgroundColor: Colors.orange.shade700, // Changed to orange
+        foregroundColor: Colors.white, // Ensures icons are white
+        elevation: 4, // Add some shadow
         centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: earnOptions.length,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16), // Consistent padding
         itemBuilder: (context, index) {
           final option = earnOptions[index];
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            elevation: 3,
+            margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted vertical margin
+            elevation: 2, // Subtle shadow for the card
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Rounded corners for cards
             child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10), // Adjusted padding inside ListTile
               leading: CircleAvatar(
-                backgroundColor: Colors.deepPurple.shade100,
-                child: Icon(option['icon'], color: Colors.deepPurple),
+                backgroundColor: Colors.orange.shade100, // Orange themed background
+                radius: 24, // Slightly larger avatar
+                child: Icon(option['icon'], color: Colors.orange.shade700, size: 28), // Orange themed icon
               ),
-              title: Text(option['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(option['description']),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              title: Text(
+                option['title'],
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black87), // Styled title
+              ),
+              subtitle: Text(
+                option['description'],
+                style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[600]), // Styled subtitle
+              ),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey), // Consistent icon style
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${option['title']} clicked!')),
+                  SnackBar(
+                    content: Text('${option['title']} clicked!', style: GoogleFonts.poppins()),
+                    backgroundColor: Colors.green, // Success feedback color
+                  ),
                 );
               },
             ),

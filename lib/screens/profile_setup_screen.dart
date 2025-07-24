@@ -1,10 +1,10 @@
-import 'dart:io';
+import 'dart:io'; // Still needed for File, but could be removed if no other file operations
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Added for SystemUiOverlayStyle consistency
-import 'package:image_picker/image_picker.dart';
-import 'dart:async'; // For Timer
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
-import 'package:flutter/foundation.dart'; // Import for debugPrint
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart'; // This import can be removed entirely
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -17,33 +17,36 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   String selectedGender = "Male";
   DateTime? selectedDOB;
-  File? _imageFile;
+  // Removed File? _imageFile;
 
-  // GlobalKey for the Form to validate all fields
   final _formKey = GlobalKey<FormState>();
 
-  OverlayEntry? _overlayEntry; // To manage the overlay message
-  Timer? _overlayTimer; // To control the duration of the overlay message
+  OverlayEntry? _overlayEntry;
+  Timer? _overlayTimer;
 
-  // Animation controllers for the slide-down effect
-  AnimationController? _animationController; // Made nullable
-  Animation<Offset>? _slideAnimation; // Made nullable
+  AnimationController? _animationController;
+  Animation<Offset>? _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController( // Initialized here
+    _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300), // Animation duration
+      duration: const Duration(milliseconds: 300),
     );
-    _slideAnimation = Tween<Offset>( // Initialized here
-      begin: const Offset(0, -1), // Start from above the screen
-      end: Offset.zero, // Slide to its original position
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _animationController!, // Use ! because it's initialized above
+      parent: _animationController!,
       curve: Curves.easeOut,
     ));
   }
@@ -53,44 +56,15 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
     nameController.dispose();
     emailController.dispose();
     phoneController.dispose();
-    _overlayTimer?.cancel(); // Cancel timer if active
-    _overlayEntry?.remove(); // Remove overlay if active
-    _animationController?.dispose(); // Dispose only if not null
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    _overlayTimer?.cancel();
+    _overlayEntry?.remove();
+    _animationController?.dispose();
     super.dispose();
   }
 
-  Future<void> _pickImage() async {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SafeArea(
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text("Take a photo"),
-              onTap: () async {
-                Navigator.pop(context);
-                final picked = await ImagePicker().pickImage(source: ImageSource.camera);
-                if (picked != null) setState(() => _imageFile = File(picked.path));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text("Choose from gallery"),
-              onTap: () async {
-                Navigator.pop(context);
-                final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-                if (picked != null) setState(() => _imageFile = File(picked.path));
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Removed _pickImage() method
 
   Future<void> _selectDOB() async {
     final DateTime? picked = await showDatePicker(
@@ -104,16 +78,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
     }
   }
 
-  // Function to show a temporary message overlay at the top with animation
   void _showTopOverlayMessage(String message, Color backgroundColor) {
-    // Remove any existing overlay before showing a new one
     _overlayEntry?.remove();
     _overlayTimer?.cancel();
-    _animationController?.reset(); // Reset animation controller only if not null
+    _animationController?.reset();
 
     if (_animationController == null || _slideAnimation == null) {
-      // Handle case where animation controllers are not initialized (e.g., very early hot reload)
-      // Fallback to a SnackBar or simply return.
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
@@ -126,16 +96,16 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: 0, // Position at the very top to overlap AppBar
+        top: 0,
         left: 0,
         right: 0,
-        child: SlideTransition( // Slide animation
-          position: _slideAnimation!, // Use ! because we checked for null
+        child: SlideTransition(
+          position: _slideAnimation!,
           child: Material(
             color: Colors.transparent,
             child: Container(
               padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 12, // Padding for status bar
+                top: MediaQuery.of(context).padding.top + 12,
                 bottom: 12,
                 left: 20,
                 right: 20,
@@ -153,51 +123,59 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
     );
 
     Overlay.of(context).insert(_overlayEntry!);
-    _animationController!.forward(); // Start animation only if not null
+    _animationController!.forward();
 
-    _overlayTimer = Timer(const Duration(seconds: 2), () { // Display for 2 seconds
-      _animationController?.reverse().then((_) { // Reverse animation before removing, check for null
+    _overlayTimer = Timer(const Duration(seconds: 2), () {
+      _animationController?.reverse().then((_) {
         _overlayEntry?.remove();
         _overlayEntry = null;
       });
     });
   }
 
-
-  // Function to handle the "Continue" button press with validation
   void _handleContinue() async {
-    // Clear any existing overlay message
     _overlayEntry?.remove();
     _overlayEntry = null;
     _overlayTimer?.cancel();
-    _animationController?.reset(); // Reset animation controller only if not null
+    _animationController?.reset();
 
-    // Validate all fields in the form
     if (_formKey.currentState!.validate()) {
-      // Also check for Date of Birth, as it's not a TextFormField
       if (selectedDOB == null) {
         _showTopOverlayMessage("Please select your Date of Birth.", Colors.red);
-        return; // Stop if DOB is not selected
+        return;
+      }
+      if (passwordController.text.isEmpty) {
+        _showTopOverlayMessage("Please enter a password.", Colors.red);
+        return;
+      }
+      if (passwordController.text.length < 6) {
+        _showTopOverlayMessage("Password must be at least 6 characters long.", Colors.red);
+        return;
+      }
+      if (passwordController.text != confirmPasswordController.text) {
+        _showTopOverlayMessage("Password and Confirm Password do not match.", Colors.red);
+        return;
       }
 
       final prefs = await SharedPreferences.getInstance();
 
-      // Save the image path to SharedPreferences if an image is selected
-      if (_imageFile != null) {
-        await prefs.setString('profile_image_path', _imageFile!.path);
-        debugPrint('ProfileSetupScreen: Image path saved: ${_imageFile!.path}');
-      } else {
-        debugPrint('ProfileSetupScreen: No image selected to save.');
-      }
+      // Removed image path saving logic
+      // if (_imageFile != null) {
+      //   await prefs.setString('profile_image_path', _imageFile!.path);
+      //   debugPrint('ProfileSetupScreen: Image path saved: ${_imageFile!.path}');
+      // } else {
+      //   debugPrint('ProfileSetupScreen: No image selected to save.');
+      // }
 
-      // Save the user's name to SharedPreferences
-      await prefs.setString('user_name', nameController.text); // <<< ADDED THIS LINE
-      debugPrint('ProfileSetupScreen: User name saved: ${nameController.text}'); // Debug print
+      await prefs.setString('user_name', nameController.text);
+      debugPrint('ProfileSetupScreen: User name saved: ${nameController.text}');
 
-      // If all validations pass, navigate to the home screen
+      await prefs.setString('user_password', passwordController.text);
+      debugPrint('ProfileSetupScreen: Password saved (for demonstration): ${passwordController.text}');
+
+
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // If validation fails, show a general error message at the top
       _showTopOverlayMessage("Please fill in all required fields correctly.", Colors.red);
     }
   }
@@ -208,7 +186,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
       const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
-        statusBarColor: Colors.transparent, // Make status bar transparent for app bar color
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ),
     );
@@ -222,28 +200,29 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: Form( // Wrapped the content with a Form widget
-        key: _formKey, // Assign the GlobalKey to the Form
+      body: Form(
+        key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
-                    child: _imageFile == null
-                        ? const Icon(Icons.camera_alt, size: 30, color: Colors.grey)
-                        : null,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
+              // Removed GestureDetector and CircleAvatar for image selection
+              // GestureDetector(
+              //   onTap: _pickImage,
+              //   child: Card(
+              //     elevation: 4,
+              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              //     child: CircleAvatar(
+              //       radius: 60,
+              //       backgroundColor: Colors.grey[200],
+              //       backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
+              //       child: _imageFile == null
+              //           ? const Icon(Icons.camera_alt, size: 30, color: Colors.grey)
+              //           : null,
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 30), // Removed this SizedBox or adjust if needed
 
               _buildInputField(
                 controller: nameController,
@@ -273,7 +252,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
                   if (value == null || value.isEmpty) {
                     return 'Email cannot be empty';
                   }
-                  // Basic email format validation
                   if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                     return 'Please enter a valid email';
                   }
@@ -291,9 +269,54 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
                   if (value == null || value.isEmpty) {
                     return 'Phone number cannot be empty';
                   }
-                  // Basic phone number length validation (adjust as needed)
                   if (value.length < 7 || value.length > 15) {
                     return 'Enter a valid phone number';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              _buildInputField(
+                controller: passwordController,
+                label: "Choose Password",
+                icon: Icons.lock,
+                isPassword: true,
+                isObscureText: !_isPasswordVisible,
+                onToggleVisibility: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password cannot be empty';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters long';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              _buildInputField(
+                controller: confirmPasswordController,
+                label: "Confirm Password",
+                icon: Icons.lock_reset,
+                isPassword: true,
+                isObscureText: !_isConfirmPasswordVisible,
+                onToggleVisibility: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Confirm password cannot be empty';
+                  }
+                  if (value != passwordController.text) {
+                    return 'Passwords do not match';
                   }
                   return null;
                 },
@@ -309,7 +332,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
                     backgroundColor: const Color(0xFFFF6F00),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  onPressed: _handleContinue, // Call the new validation function
+                  onPressed: _handleContinue,
                   child: const Text("Continue", style: TextStyle(fontSize: 16, color: Colors.white)),
                 ),
               ),
@@ -321,17 +344,20 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
     );
   }
 
-  // Modified _buildInputField to use TextFormField and accept a validator
   Widget _buildInputField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
     TextInputType inputType = TextInputType.text,
-    String? Function(String?)? validator, // Added validator parameter
+    bool isPassword = false,
+    bool isObscureText = false,
+    VoidCallback? onToggleVisibility,
+    String? Function(String?)? validator,
   }) {
-    return TextFormField( // Changed from TextField to TextFormField
+    return TextFormField(
       controller: controller,
       keyboardType: inputType,
+      obscureText: isObscureText,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
@@ -342,7 +368,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
           borderSide: BorderSide(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(12),
         ),
-        // Add focused and error borders for better UX
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Color(0xFFFF6F00), width: 2),
           borderRadius: BorderRadius.circular(12),
@@ -355,12 +380,20 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
           borderSide: const BorderSide(color: Colors.red, width: 2),
           borderRadius: BorderRadius.circular(12),
         ),
+        suffixIcon: isPassword
+            ? IconButton(
+          icon: Icon(
+            isObscureText ? Icons.visibility_off : Icons.visibility,
+            color: Colors.grey,
+          ),
+          onPressed: onToggleVisibility,
+        )
+            : null,
       ),
-      validator: validator, // Assign the passed validator
+      validator: validator,
     );
   }
 
-  // Modified _buildGenderDropdown to use DropdownButtonFormField and accept a validator
   Widget _buildGenderDropdown() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -369,7 +402,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: DropdownButtonFormField<String>( // Changed from DropdownButtonFormField to DropdownButtonFormField
+      child: DropdownButtonFormField<String>(
         value: selectedGender,
         icon: const Icon(Icons.arrow_drop_down),
         decoration: const InputDecoration(
@@ -380,7 +413,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
             .map((g) => DropdownMenuItem(value: g, child: Text(g)))
             .toList(),
         onChanged: (val) => setState(() => selectedGender = val!),
-        validator: (value) { // Added validator for gender
+        validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please select your gender';
           }
@@ -390,7 +423,6 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
     );
   }
 
-  // Modified _buildDOBPicker to include GestureDetector for validation check
   Widget _buildDOBPicker() {
     return GestureDetector(
       onTap: _selectDOB,
@@ -405,7 +437,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
           children: [
             const Icon(Icons.calendar_today_outlined, color: Colors.grey),
             const SizedBox(width: 10),
-            Expanded( // Added Expanded to prevent text overflow
+            Expanded(
               child: Text(
                 selectedDOB != null
                     ? "${selectedDOB!.day}/${selectedDOB!.month}/${selectedDOB!.year}"

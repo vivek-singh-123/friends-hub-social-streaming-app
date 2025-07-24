@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GetRupeesScreen extends StatelessWidget {
   const GetRupeesScreen({super.key});
@@ -15,15 +16,26 @@ class GetRupeesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        title: const Text('Get Rupees'),
+        title: Text(
+          'Get Rupees',
+          style: GoogleFonts.poppins(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.orange.shade700,
+        foregroundColor: Colors.white,
+        elevation: 4,
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Purchase history coming soon!')),
+                SnackBar(
+                  content: Text('Purchase history coming soon!', style: GoogleFonts.poppins()),
+                  backgroundColor: Colors.blueAccent,
+                ),
               );
             },
           ),
@@ -32,19 +44,20 @@ class GetRupeesScreen extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Choose Your Coin Pack',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: GoogleFonts.poppins(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
           ),
           const SizedBox(height: 10),
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 14,
-                childAspectRatio: 1.3,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.3, // Keeping this for now, will adjust if needed after padding change
               ),
               itemCount: coinOffers.length,
               itemBuilder: (context, index) {
@@ -53,31 +66,39 @@ class GetRupeesScreen extends StatelessWidget {
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('You selected ${offer['coins']} coins for ${offer['price']}'),
+                        content: Text(
+                            'You selected ${offer['coins']} coins for ${offer['price']}',
+                            style: GoogleFonts.poppins()),
+                        backgroundColor: Colors.green,
                       ),
                     );
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple.withOpacity(0.1),
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.deepPurple, width: 1),
+                      side: BorderSide(color: Colors.orange.shade300, width: 1),
                     ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.monetization_on, color: Colors.amber.shade600, size: 32),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${offer['coins']} Coins',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        Text(
-                          offer['price'],
-                          style: const TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // *** FURTHER REDUCED VERTICAL PADDING ***
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.monetization_on, color: Colors.amber.shade700, size: 38),
+                          const SizedBox(height: 8), // Slightly reduced if possible
+                          Text(
+                            '${offer['coins']} Coins',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold, fontSize: 17), // Slightly reduced font size
+                          ),
+                          const SizedBox(height: 2), // Slightly reduced
+                          Text(
+                            offer['price'],
+                            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]), // Slightly reduced font size
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

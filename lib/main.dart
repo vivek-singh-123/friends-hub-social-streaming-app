@@ -115,7 +115,7 @@ class GoshLiveApp extends StatelessWidget {
 
         // ✅ Edit & Full Profile
         '/editProfile': (context) => EditProfileScreen(), // Removed 'const' keyword
-        '/fullProfile': (context) => FullProfileScreen(), // Removed 'const' keyword
+        //'/fullProfile': (context) => FullProfileScreen(), // Removed 'const' keyword
 
         // ✅ NEW Screens
         '/agency': (context) => AgencyScreen(), // Removed 'const' keyword

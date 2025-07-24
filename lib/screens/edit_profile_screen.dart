@@ -1,7 +1,6 @@
-import 'dart:io';
+import 'dart:io'; // Still needed for File, but could be removed if no other file operations
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import 'package:gosh_app/core/constant/constant.dart'; // For kPrimaryColor (assuming it's deepPurple or similar for this screen)
 
@@ -13,7 +12,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  File? _image;
+  // Removed File? _image;
   final _nameController = TextEditingController();
   final _bioController = TextEditingController();
   final _birthdayController = TextEditingController(); // Consider using a DatePicker for this
@@ -32,13 +31,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
-    // Load image path
-    final imagePath = prefs.getString('profile_image_path');
-    if (imagePath != null && File(imagePath).existsSync()) {
-      setState(() {
-        _image = File(imagePath);
-      });
-    }
+    // Removed Load image path logic
+    // final imagePath = prefs.getString('profile_image_path');
+    // if (imagePath != null && File(imagePath).existsSync()) {
+    //   setState(() {
+    //     _image = File(imagePath);
+    //   });
+    // }
 
     // Load other profile data (example)
     // You would need to save these in ProfileSetupScreen as well
@@ -54,17 +53,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {}); // Update UI after loading data
   }
 
-  Future<void> _pickImage() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        _image = File(picked.path);
-      });
-      // Save the newly picked image path to preferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('profile_image_path', picked.path);
-    }
-  }
+  // Removed _pickImage() method
 
   // Example for integrating a DatePicker for Birthday
   /*
@@ -126,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     await prefs.setString('user_instagram', _instagramController.text);
     await prefs.setString('user_twitter', _twitterController.text);
 
-    // Image path is already saved in _pickImage()
+    // Image path is no longer handled here
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -169,39 +158,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Column(
             children: [
-              // 🔹 Profile Image
-              Center(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 65, // Slightly larger
-                      backgroundColor: Colors.grey[300],
-                      backgroundImage: _image != null
-                          ? FileImage(_image!)
-                          : const AssetImage('assets/default_avatar.png')
-                      as ImageProvider,
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: _pickImage,
-                        child: Container(
-                          padding: const EdgeInsets.all(8), // Larger tap area
-                          decoration: const BoxDecoration(
-                            color: Colors.deepPurple, // Or kPrimaryColor
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.edit,
-                              size: 18, color: Colors.white), // Larger icon
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Removed Profile Image section
 
-              const SizedBox(height: 30),
+              // const SizedBox(height: 30), // You might want to remove or adjust this SizedBox
 
               buildSectionTitle("Basic Info"),
               _buildTextField("Name", _nameController, icon: Icons.person_outline),
