@@ -1,10 +1,15 @@
 import 'dart:io'; // Still needed for File, but could be removed if no other file operations
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart'; // This import can be removed entirely
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+
+import '../backend/register/register.dart';
+
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -19,6 +24,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final Register _registerController = Get.put(Register());
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -94,6 +100,59 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
       return;
     }
 
+
+
+    void _handleContinue() async {
+      // Reset overlay if it's already active
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      _overlayTimer?.cancel();
+      _animationController?.reset();
+
+      // Validate form fields
+      if (_formKey.currentState!.validate()) {
+        if (selectedDOB == null) {
+          _showTopOverlayMessage("Please select your Date of Birth.", Colors.red);
+          return;
+        }
+        if (passwordController.text != confirmPasswordController.text) {
+          _showTopOverlayMessage("Passwords do not match.", Colors.red);
+          return;
+        }
+
+        final dobFormatted = "${selectedDOB!.year}-${selectedDOB!.month.toString().padLeft(2, '0')}-${selectedDOB!.day.toString().padLeft(2, '0')}";
+
+        // Call your Register API
+        await _registerController.registeruser(
+          Token: "dljaklejidnjkd", // Replace this with your actual token
+          Name: nameController.text,
+          Gender: selectedGender,
+          Dob: dobFormatted,
+          Email: emailController.text,
+          Password: passwordController.text,
+          Images: "", // You can handle image upload separately
+          phone: phoneController.text,
+        );
+
+        // Check success or failure from controller
+        if (_registerController.message.value == "Registration successful!") {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_name', nameController.text);
+          await prefs.setString('user_password', passwordController.text);
+
+          _showTopOverlayMessage("Registration successful!", Colors.green);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          _showTopOverlayMessage(_registerController.message.value, Colors.red);
+        }
+      } else {
+        _showTopOverlayMessage("Please fill in all required fields.", Colors.red);
+      }
+    }
+
+
+
+
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: 0,
@@ -134,51 +193,59 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> with SingleTick
   }
 
   void _handleContinue() async {
+    // Remove existing overlay
     _overlayEntry?.remove();
-    _overlayEntry = null;
     _overlayTimer?.cancel();
     _animationController?.reset();
 
+    // Validate form
     if (_formKey.currentState!.validate()) {
       if (selectedDOB == null) {
         _showTopOverlayMessage("Please select your Date of Birth.", Colors.red);
         return;
       }
-      if (passwordController.text.isEmpty) {
-        _showTopOverlayMessage("Please enter a password.", Colors.red);
-        return;
-      }
-      if (passwordController.text.length < 6) {
-        _showTopOverlayMessage("Password must be at least 6 characters long.", Colors.red);
-        return;
-      }
+
       if (passwordController.text != confirmPasswordController.text) {
-        _showTopOverlayMessage("Password and Confirm Password do not match.", Colors.red);
+        _showTopOverlayMessage("Passwords do not match.", Colors.red);
         return;
       }
 
-      final prefs = await SharedPreferences.getInstance();
+      // Format DOB as yyyy-MM-dd
+      final dobFormatted = "${selectedDOB!.year}-${selectedDOB!.month.toString().padLeft(2, '0')}-${selectedDOB!.day.toString().padLeft(2, '0')}";
 
-      // Removed image path saving logic
-      // if (_imageFile != null) {
-      //   await prefs.setString('profile_image_path', _imageFile!.path);
-      //   debugPrint('ProfileSetupScreen: Image path saved: ${_imageFile!.path}');
-      // } else {
-      //   debugPrint('ProfileSetupScreen: No image selected to save.');
-      // }
+      try {
+        // Call API
+        await _registerController.registeruser(
+          Token: "dljaklejidnjkd", // 🔁 Replace with your real token
+          Name: nameController.text.trim(),
+          Gender: selectedGender,
+          Dob: dobFormatted,
+          Email: emailController.text.trim(),
+          Password: passwordController.text,
+          Images: "", // Optional: use if you plan to add image upload
+          phone: phoneController.text.trim(),
+        );
 
-      await prefs.setString('user_name', nameController.text);
-      debugPrint('ProfileSetupScreen: User name saved: ${nameController.text}');
+        // Success case
+        if (_registerController.message.value == "Registration successful!") {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_name', nameController.text.trim());
+          await prefs.setString('user_password', passwordController.text);
 
-      await prefs.setString('user_password', passwordController.text);
-      debugPrint('ProfileSetupScreen: Password saved (for demonstration): ${passwordController.text}');
-
-
-      Navigator.pushReplacementNamed(context, '/home');
+          _showTopOverlayMessage("Registration successful!", Colors.green);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          _showTopOverlayMessage(_registerController.message.value, Colors.red);
+        }
+      } catch (e) {
+        _showTopOverlayMessage("An error occurred. Please try again.", Colors.red);
+        debugPrint("Registration error: $e");
+      }
     } else {
-      _showTopOverlayMessage("Please fill in all required fields correctly.", Colors.red);
+      _showTopOverlayMessage("Please fill in all required fields.", Colors.red);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
