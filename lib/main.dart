@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // ✅ Needed for SystemChrome
+import 'package:flutter/services.dart';
 import 'package:gosh_app/screens/edit_profile_screen.dart';
 import 'package:gosh_app/screens/vip_screen.dart';
-import 'package:gosh_app/screens/full_profile_screen.dart'; // ✅ NEW Import
-import 'package:gosh_app/screens/reset_password_screen.dart'; // Adjust 'gosh_app' if your project name is different
+import 'package:gosh_app/screens/reset_password_screen.dart';
 import 'package:gosh_app/screens/welcome_screen.dart';
 
 // Splash/Login/Profile Setup
@@ -18,13 +17,10 @@ import 'screens/wallet_screen.dart';
 
 // Profile Subpages
 import 'screens/earn_money_screen.dart';
-import 'screens/get_rupees_screen.dart';
-// import 'screens/messages_screen.dart'; // No longer needed as a direct route
-import 'screens/task_screen.dart';
 import 'screens/badge_screen.dart';
 import 'screens/account_security_screen.dart';
 import 'screens/settings_screen.dart';
-import 'screens/terms_and_privacy_screen.dart'; // Make sure this is imported if it's a separate screen
+import 'screens/terms_and_privacy_screen.dart';
 
 // Top Profile Stats Screens
 import 'screens/followers_screen.dart';
@@ -100,13 +96,11 @@ class GoshLiveApp extends StatelessWidget {
         '/resetPassword': (context) => ResetPasswordScreen(), // Removed 'const' keyword
         // ✅ Profile Section Routes
         '/earn': (context) => EarnMoneyScreen(), // Removed 'const' keyword
-        '/getRupees': (context) => GetRupeesScreen(), // Removed 'const' keyword
-        '/task': (context) => TaskScreen(), // Removed 'const' keyword
         '/badge': (context) => BadgeScreen(), // Removed 'const' keyword
         '/accountSecurity': (context) => AccountSecurityScreen(), // Removed 'const' keyword
         '/settings': (context) => SettingsScreen(), // Removed 'const' keyword
         '/vip': (context) => VipScreen(), // Removed 'const' keyword
-        '/termsAndPrivacy': (context) => const TermsAndPrivacyScreen(), // This one can remain const if it's a StatelessWidget with only const fields
+        '/termsAndPrivacy': (context) => const TermsAndPrivacyScreen(),
 
         // ✅ Top Stats Routes
         '/followers': (context) => FollowersScreen(), // Removed 'const' keyword

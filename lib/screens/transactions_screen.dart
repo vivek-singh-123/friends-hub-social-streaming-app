@@ -105,10 +105,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return Scaffold(
       appBar: AppBar(
         title:
-        const Text('Transactions', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Transactions', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
         elevation: 1,
+        // Add an explicit back arrow button with a black color
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline, color: Colors.black),
@@ -116,7 +120,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -227,4 +231,5 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       ),
     );
   }
+
 }

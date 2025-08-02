@@ -1,147 +1,112 @@
 import 'package:flutter/material.dart';
-import 'transactions_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'transactions_screen.dart'; // Import the transactions screen
 
 class WalletScreen extends StatelessWidget {
   final int coinBalance = 0;
 
-  final List<Map<String, dynamic>> coinOptions = [
-    {'coins': 700, 'bonus': 50, 'price': 100},
-    {'coins': 7000, 'bonus': 500, 'price': 1000},
-    {'coins': 21000, 'bonus': 2100, 'price': 3000},
-    {'coins': 42000, 'bonus': 4800, 'price': 6000},
-    {'coins': 70000, 'bonus': 9000, 'price': 10100},
-    {'coins': 105000, 'bonus': 15000, 'price': 15100},
+  final List<Map<String, dynamic>> coinOffers = const [
+    {'coins': 100, 'price': '₹10'},
+    {'coins': 500, 'price': '₹45'},
+    {'coins': 1000, 'price': '₹85'},
+    {'coins': 2500, 'price': '₹200'},
+    {'coins': 5000, 'price': '₹390'},
+    {'coins': 10000, 'price': '₹750'},
   ];
-
-  WalletScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: const Color(0xFFF0F2F5),
       appBar: AppBar(
-        title: const Text(
-          "Wallet",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        title: Text(
+          'Wallet',
+          style: GoogleFonts.poppins(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: Colors.white,
-        elevation: 1,
+        backgroundColor: Colors.orange.shade700,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.history, color: Colors.black),
+            icon: const Icon(Icons.history),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const TransactionsScreen()),
+              // Navigate to the TransactionsScreen
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const TransactionsScreen(),
+                ),
               );
             },
           ),
         ],
-        iconTheme: const IconThemeData(color: Colors.black),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 🪙 Coin Balance
-              Row(
-                children: const [
-                  Text("🪙", style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 6),
-                  Text(
-                    "Coin Balance",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          Text(
+            'Choose Your Coin Pack',
+            style: GoogleFonts.poppins(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.3,
               ),
-              const SizedBox(height: 6),
-              Text(
-                "$coinBalance",
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              const Text(
-                "Select Amount",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-
-              // Grid View
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: coinOptions.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 0.82,
-                ),
-                itemBuilder: (context, index) {
-                  final item = coinOptions[index];
-                  return GestureDetector(
-                    onTap: () {
-                      // Handle tap
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 6,
-                            offset: const Offset(2, 2),
-                          )
-                        ],
+              itemCount: coinOffers.length,
+              itemBuilder: (context, index) {
+                final offer = coinOffers[index];
+                return GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            'You selected ${offer['coins']} coins for ${offer['price']}',
+                            style: GoogleFonts.poppins()),
+                        backgroundColor: Colors.green,
                       ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: Colors.orange.shade300, width: 1),
+                    ),
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("🪙🪙", style: TextStyle(fontSize: 18)),
-                          const SizedBox(height: 4),
+                          Icon(Icons.monetization_on, color: Colors.amber.shade700, size: 38),
+                          const SizedBox(height: 8),
                           Text(
-                            '${item['coins']}',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            '${offer['coins']} Coins',
+                            style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold, fontSize: 17),
                           ),
+                          const SizedBox(height: 2),
                           Text(
-                            '+${item['bonus']}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.green,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            '₹${item['price']}',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
-                            ),
+                            offer['price'],
+                            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-            ],
+                  ),
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

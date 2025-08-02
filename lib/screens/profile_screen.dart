@@ -1,10 +1,10 @@
-import 'dart:io'; // Keep this now, as the image section is restored
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Keep this now
-import 'package:gosh_app/core/constant/constant.dart'; // For kPrimaryColor
-import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
-import 'package:flutter/foundation.dart'; // Import for debugPrint
-import 'package:google_fonts/google_fonts.dart'; // For consistent typography
+import 'package:image_picker/image_picker.dart';
+import 'package:gosh_app/core/constant/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -14,20 +14,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  File? _image; // Restored
-  String _userName = "User Name"; // Default value, will be updated from prefs
+  File? _image;
+  String _userName = "User Name";
 
   @override
   void initState() {
     super.initState();
-    _loadProfileData(); // Load all profile data when the screen initializes
+    _loadProfileData();
   }
 
-  // This method will load both image and name from SharedPreferences
   Future<void> _loadProfileData() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Load image path (Restored)
     final imagePath = prefs.getString('profile_image_path');
     debugPrint('ProfileScreen: Attempting to load image from path: $imagePath');
 
@@ -40,13 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         debugPrint('ProfileScreen: Image loaded successfully from path: $imagePath');
       } else {
         debugPrint('ProfileScreen: Image file does not exist at path: $imagePath');
-        await prefs.remove('profile_image_path'); // Clear invalid path
+        await prefs.remove('profile_image_path');
       }
     } else {
       debugPrint('ProfileScreen: No image path found in SharedPreferences.');
     }
 
-    // Load user name
     final savedUserName = prefs.getString('user_name');
     if (savedUserName != null && savedUserName.isNotEmpty) {
       setState(() {
@@ -58,14 +55,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // _pickImage() method restored
   Future<void> _pickImage() async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
         _image = File(picked.path);
       });
-      // Save the newly picked image path to preferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('profile_image_path', picked.path);
       debugPrint('ProfileScreen: New image picked and saved to path: ${picked.path}');
@@ -120,12 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Stack(
           children: [
             SingleChildScrollView(
-              // Reverted padding to original, as top content is restored
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 🔹 Profile Info (This section scrolls) - RESTORED
                   Row(
                     children: [
                       Stack(
@@ -204,7 +197,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 30),
 
-                  // 🔸 Followers Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -224,7 +216,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const _VipPromoTile(),
 
-                  // 🔸 Agency & Add Host Row
                   Row(
                     children: [
                       Expanded(
@@ -282,45 +273,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Profile Tiles
                   _buildProfileTile(Icons.account_balance_wallet, "Wallet",
                       trailingText: '0'),
                   _buildProfileTile(Icons.monetization_on, "Earn Money"),
-                  _buildProfileTile(Icons.redeem, "Get Rupees", showDot: true),
-                  _buildProfileTile(Icons.task_alt, "Task", badge: "Check In"),
                   _buildProfileTile(Icons.emoji_events, "Badge"),
                   _buildProfileTile(Icons.security, "Account Security"),
                   _buildProfileTile(Icons.settings, "Settings"),
                 ],
               ),
             ),
-
-            // 🔘 Go to Full Profile (This entire Positioned widget is REMOVED)
-            // Positioned(
-            //   top: 70,
-            //   right: 20,
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       Navigator.pushNamed(context, '/fullProfile');
-            //     },
-            //     child: Container(
-            //       padding: const EdgeInsets.all(8),
-            //       decoration: BoxDecoration(
-            //         color: Colors.white.withOpacity(0.8),
-            //         shape: BoxShape.circle,
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: Colors.black.withOpacity(0.1),
-            //             blurRadius: 5,
-            //             offset: const Offset(0, 2),
-            //           ),
-            //         ],
-            //       ),
-            //       child: const Icon(Icons.arrow_forward_ios,
-            //           size: 20, color: Colors.black87),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -374,12 +335,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               break;
             case 'Earn Money':
               Navigator.pushNamed(context, '/earn');
-              break;
-            case 'Get Rupees':
-              Navigator.pushNamed(context, '/getRupees');
-              break;
-            case 'Task':
-              Navigator.pushNamed(context, '/task');
               break;
             case 'Badge':
               Navigator.pushNamed(context, '/badge');
